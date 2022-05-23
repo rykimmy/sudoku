@@ -22,5 +22,7 @@ The ‘solver’ will call *read_puzzle*, which reads a sudoku puzzle from stdin
 
 Creator → valid_input → compare_solutions → print_sudoku
 
+The 'creator' will call *
+
 6. Major data structures
 7. Testing plan
