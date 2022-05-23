@@ -3,9 +3,25 @@
 ### Sections
 1. User interface
 2. Inputs and outputs
+
+Inputs and outputs will be described according to the two major modes: ‘create’ and ‘solve’.
+
+*Create*
+The ‘creator’ will take no input aside from when calling the program to execute. It will output a newly created puzzle to stdout.
+
+*Solve*
+The ‘solver’ will take a sudoku puzzle through prompted user input through stdin. The program will then output the solved puzzle through stdout.
+
 3. Functional decomposition into modules
 4. Pseudo code
 5. Dataflow through modules
+
+Solver → read_puzzle → inserts number → valid_input → count_solutions → using compare_solution → print_solutions
+
+The ‘solver’ will call *read_puzzle*, which reads a sudoku puzzle from stdin and converts it to a board struct. It will then iterate through the board and insert numbers, using a backtracker method to correctly input numbers into slots. The *valid_input* function will determine whether the number inserted is a guaranteed answer or a tentative answer that could be wrong. At the end, the *count_solutions* function checks how many solutions the sudoku puzzle contains and uses *compare_solutions* to differentiate between completed sudoku puzzles. *print_solutions* will display to stdout the solutions of the puzzle.
+
+Creator → valid_input → compare_solutions → print_sudoku
+
 6. Major data structures
 7. Testing plan
 
@@ -33,3 +49,18 @@ Beyond calling the program, we anticipate further interactions with the user, sp
 
 
 ### Pseudo Code
+
+* Parse Arguments
+    * Ensure 2 arguments, 2nd argument is either “solve” or “create”
+    * If ./sudoku solve, store the given puzzle in sudoku_array
+* Make Solver
+    * Iterate through every empty slot and fill the slot’s bag with possible answers. If there is only one possible answer in bag, set the slot’s number to that answer and set the boolean representing a set slot to true
+    * Then, iterate through remaining empty slots. Extract a number from the bag of possible answers and set the slot’s number to that answer. Continue iterating through empty slots until puzzle is finished or puzzle reaches a slot where no number is possible. 
+    * If puzzle reaches a slot where no number is possible, backtrack.
+    * When backtracking, the puzzle with return to the previous slot and call bag_extract() again to try a new number.
+    * Print sudoku 
+* Make Creator
+    * Fill in a puzzle by putting random numbers in each slot until the puzzle is finished or there is a slot where no number can be put
+    * Use backtracking if there is a slot with no possible answer
+    * Once the puzzle is finished, select a certain number of random slots. If removing the slot results in a puzzle with more than one possible solution, put the number back and pick a new random slot. Once enough slots have been removed, return the puzzle to the caller
+    * Print sudoku
