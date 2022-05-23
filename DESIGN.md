@@ -33,3 +33,18 @@ Beyond calling the program, we anticipate further interactions with the user, sp
 
 
 ### Pseudo Code
+
+* Parse Arguments
+    * Ensure 2 arguments, 2nd argument is either “solve” or “create”
+    * If ./sudoku solve, store the given puzzle in sudoku_array
+* Make Solver
+    * Iterate through every empty slot and fill the slot’s bag with possible answers. If there is only one possible answer in bag, set the slot’s number to that answer and set the boolean representing a set slot to true
+    * Then, iterate through remaining empty slots. Extract a number from the bag of possible answers and set the slot’s number to that answer. Continue iterating through empty slots until puzzle is finished or puzzle reaches a slot where no number is possible. 
+    * If puzzle reaches a slot where no number is possible, backtrack.
+    * When backtracking, the puzzle with return to the previous slot and call bag_extract() again to try a new number.
+    * Print sudoku 
+* Make Creator
+    * Fill in a puzzle by putting random numbers in each slot until the puzzle is finished or there is a slot where no number can be put
+    * Use backtracking if there is a slot with no possible answer
+    * Once the puzzle is finished, select a certain number of random slots. If removing the slot results in a puzzle with more than one possible solution, put the number back and pick a new random slot. Once enough slots have been removed, return the puzzle to the caller
+    * Print sudoku
