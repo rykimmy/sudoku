@@ -47,23 +47,21 @@ The ‘solver’ will take a sudoku puzzle through prompted user input through s
 
 ### Functional Decomposition Into Modules
 
-* solver
-* creator
-* valid_input -> checks if inserting number into board works
-* read_puzzle
-* count_solutions
-* compare_solutions
-* print_sudoku
-
 We anticipate the following modules and/or functions:
 
 *solver*, which will take a sudoku puzzle, find all possible solutions, and provide one such solution to stdout.
+
 *creator*, which will generate a new sudoku puzzle and output it to stdout.
-*valid_input*, which checks if the most recently inserted number works is valid (unique number 1-9 horizontally, vertically, and per block
-*read_puzzle*, which reads the sudoku from stdin and converts it to the board struct
-*count_solutions*, which checks how many solutions the current board has, verifying that the final sudoku has a unique solution
-*compare_solutions*, which is a helper function for *count_solutions* that checks if a sudoku board solution is different from another
-*print_sudoku*, which prints the final board struct to stdout
+
+*valid_input*, which checks if the most recently inserted number works is valid (unique number 1-9 horizontally, vertically, and per block)
+
+*read_puzzle*, which reads the sudoku from stdin and converts it to the board struct.
+
+*count_solutions*, which checks how many solutions the current board has, verifying that the final sudoku has a unique solution.
+
+*compare_solutions*, which is a helper function for *count_solutions* that checks if a sudoku board solution is different from another.
+
+*print_sudoku*, which prints the final board struct to stdout.
 
 
 ### Pseudo Code
