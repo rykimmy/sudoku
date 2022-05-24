@@ -45,6 +45,25 @@ The ‘creator’ will take no input aside from when calling the program to exec
 The ‘solver’ will take a sudoku puzzle through prompted user input through stdin. The program will then output the solved puzzle through stdout.
 
 
+### Functional Decomposition Into Modules
+
+We anticipate the following modules and/or functions:
+
+*solver*, which will take a sudoku puzzle, find all possible solutions, and provide one such solution to stdout.
+
+*creator*, which will generate a new sudoku puzzle and output it to stdout.
+
+*valid_input*, which checks if the most recently inserted number works is valid (unique number 1-9 horizontally, vertically, and per block)
+
+*read_puzzle*, which reads the sudoku from stdin and converts it to the board struct.
+
+*count_solutions*, which checks how many solutions the current board has, verifying that the final sudoku has a unique solution.
+
+*compare_solutions*, which is a helper function for *count_solutions* that checks if a sudoku board solution is different from another.
+
+*print_sudoku*, which prints the final board struct to stdout.
+
+
 ### Pseudo Code
 
 * Parse Arguments
@@ -67,6 +86,55 @@ The ‘solver’ will take a sudoku puzzle through prompted user input through s
 
 Solver → read_puzzle → inserts number → valid_input → count_solutions → using compare_solution → print_solutions
 
-The ‘solver’ will call *read_puzzle*, which reads a sudoku puzzle from stdin and converts it to a board struct. It will then iterate through the board and insert numbers, using a backtracker method to correctly input numbers into slots. The *valid_input* function will determine whether the number inserted is a guaranteed answer or a tentative answer that could be wrong. At the end, the *count_solutions* function checks how many solutions the sudoku puzzle contains and uses *compare_solutions* to differentiate between completed sudoku puzzles. *print_solutions* will display to stdout the solutions of the puzzle.
+The `solver` will call *read_puzzle*, which reads a sudoku puzzle from stdin and converts it to a board struct. It will then iterate through the board and insert numbers, using a backtracker method to correctly input numbers into slots. The *valid_input* function will determine whether the number inserted is a guaranteed answer or a tentative answer that could be wrong. At the end, the *count_solutions* function checks how many solutions the sudoku puzzle contains and uses *compare_solutions* to differentiate between completed sudoku puzzles. *print_sudoku* will display to stdout the solutions of the puzzle.
 
 Creator → valid_input → compare_solutions → print_sudoku
+
+The `creator` will call *creator*, which will use *valid_input* to make a properly formatted and randomized Sudoku puzzle. Then, `creator` will select slots at random, remove the number held there, and call *count_solutions*. If there is more than one solution, `creator` will put the number back into the slot and try a new slot. `creator` will continue this pattern until enough slots are empty (as specified by the difficulty level). Then, *print_sudoku* will display to stdout the solutions of the puzzle.
+
+
+### Major Data Structures
+
+* Sudoku **sudoku (array holds 9 array of structs) 
+    * Array - sudoku_array
+    * Int - numberofsolutions
+* struct** Board (array of structs):
+    * Int – number representing the slot
+    * Bag – hold possible answers
+    * Int – hold size of bag of possible answers
+    * Bool – to signal whether slot is set or modifiable (can also use the bag to signal this)
+
+We anticipate the following data structures:
+
+*board*
+This struct represents the entire sudoku board. It will hold an array of 9 arrays of 9 slots (slots**) each, which holds all the tiles on the board as well as an integer to count the number of possible solutions to the particular puzzle.
+
+*bag*
+The bag struct will be used within the slot struct, and it will hold the possible numbers that could fit a particular slot, if any.
+
+
+### Testing Plan
+
+Unit Testing
+* Test *valid_input* for cases which should return a valid input and cases which should not
+* Test *count_solutions*
+* Test *read_puzzle*
+* Test *print_puzzle*
+* Test ./sudoku create, printing out the intermediate solved puzzle and then the final puzzle with numbers taken out
+* Test ./sudoku solve for a unique puzzle, printing out the input puzzle and then printing out the final puzzle
+
+
+Integration Testing
+* Test for command-line arguments
+* Test with incorrect number of arguments
+* Test with no difficulty level
+* Test with invalid difficulty level
+* Test ./sudoku solve with a puzzle with one solution
+* Test ./sudoku solve with a puzzle with multiple solutions
+* Valgrind ./sudoku create
+* Valgrind ./sudoku solve 
+
+
+Fuzz Testing
+* Fuzz testing will use ./sudoku create and solve to create random puzzles and test ./sudoku solve's ability to solve them
+
