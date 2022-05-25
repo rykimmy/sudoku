@@ -218,6 +218,7 @@ bool valid_input(board_t *board, int num, int row, int column) {
 }
 
 
+
 int main () {
   board_t *board = board_new();
   if (valid_input(board, 5, 1, 2)) {
