@@ -40,16 +40,29 @@ static slot_t *slot_new(int num, bool given) {
   return slot;
 }
 
-/***************** board_new *****************/
+static void slot_set(slot_t *slot, int num, bool given) {
+  slot->num = num;
+  slot->given = given;
+}
+
+
+void set_num(board_t *board, int row, int column, int num, bool given) {
+  board->grid[row][column]->num = num;
+  board->grid[row][column]->given = given;
+}
+
+
 board_t *board_new() 
 {
   board_t *board = malloc(sizeof(board_t));
   slot_t ***row = calloc(sizeof(slot_t), 9);
+  
   for (int i = 0; i < 9; i++) {
     slot_t **column = calloc(sizeof(slot_t), 9);
     row[i] = column;
   }
   
+ 
   board->grid = row;
   for (int i = 0; i < 9; i++) {
     for (int j = 0; j < 9; j++) {
@@ -57,6 +70,8 @@ board_t *board_new()
       board->grid[i][j] = slot;
     }
   }
+  
+  
   board->grid[0][0]->num = 2;
   board->grid[1][1]->num = 5;
 
@@ -236,18 +251,16 @@ void board_set(board_t *brd, int num, int row, int col)
     brd->grid[row][col]->num = num;
 }
 
-/***************** slot_get *****************/
-slot_t *slot_get(board_t *brd, int row, int col)
-{
-    slot_t *slot;
-    slot = brd->grid[row][col];
-    if (slot == NULL) {
-        fprintf(stderr, "[board.c, board_set] Slot does not exist. \n");
-        return NULL;
-    } else {
-        printf("%d \n", slot->num);
-        return slot;
+/***************** emptyLocation *****************/
+bool emptyLocation(board_t *board) {
+  for (int i = 0; i < 9; i++) {
+    for (int j = 0; j < 9; j++) {
+      if (board->grid[i][j]->num == 0) {
+        return true;
+      }
     }
+  }
+  return false;
 }
 
 /***************** board_print *****************/
@@ -282,7 +295,6 @@ void board_delete(board_t *brd)
 /***************** board_iterate *****************/
 void board_iterate(board_t *brd, void *arg, void (*itemfunc)(void *arg, void *item) )
 {
-
 }
 
 int main () {
