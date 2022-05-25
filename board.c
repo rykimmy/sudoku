@@ -11,19 +11,27 @@
 #include <string.h>
 #include <stdbool.h>
 
-/**************** local types ****************/
+/////////////////////////////////
+/********** Local Types ********/
+/////////////////////////////////
 typedef struct slot {
   int num;                        // integer key provided by caller                 
   bool given;                     // boolean signifying a given number
 } slot_t;
 
 
-/**************** global types ****************/
+//////////////////////////////////
+/********** Global Types ********/
+//////////////////////////////////
 typedef struct board {
   slot_t ***grid;       
 } board_t;
 
+//////////////////////////
+/********** APIs ********/
+//////////////////////////
 
+/***************** slot_new *****************/
 static slot_t *slot_new(int num, bool given) {
   slot_t *slot = malloc(sizeof(slot_t));
   slot->num = num;
@@ -31,6 +39,7 @@ static slot_t *slot_new(int num, bool given) {
   return slot;
 }
 
+/***************** board_new *****************/
 board_t *board_new() 
 {
   board_t *board = malloc(sizeof(board_t));
@@ -53,6 +62,7 @@ board_t *board_new()
   return board;
 }
 
+/***************** valid_input *****************/
 bool valid_input(board_t *board, int num, int row, int column) {
   // check if same number is in row
   for (int i = 0; i < 9; i++) {
@@ -218,7 +228,44 @@ bool valid_input(board_t *board, int num, int row, int column) {
   return true;
 }
 
+/***************** board_set *****************/
+void board_set(board_t *brd, int num, int row, int col)
+{
+    // assertp(brd,"[board.c, board_set] ");
+    brd->grid[row][col]->num = num;
+}
 
+/***************** slot_get *****************/
+slot_t *slot_get(board_t *brd, int row, int col)
+{
+    slot_t *slot;
+    slot = brd->grid[row][col];
+    if (slot == NULL) {
+        fprintf(stderr, "[board.c, board_set] Slot does not exist. \n");
+        return NULL;
+    } else {
+        printf("%d \n", slot->num);
+        return slot;
+    }
+}
+
+/***************** board_print *****************/
+void board_print()
+{
+
+}
+
+/***************** board_delete *****************/
+void board_delete()
+{
+
+}
+
+/***************** board_iterate *****************/
+void board_iterate()
+{
+
+}
 
 int main () {
   board_t *board = board_new();
