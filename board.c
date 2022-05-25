@@ -10,13 +10,14 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
+#include "libcs50/memory.h"
 
 /////////////////////////////////
 /********** Local Types ********/
 /////////////////////////////////
 typedef struct slot {
-  int num;                        // integer key provided by caller                 
-  bool given;                     // boolean signifying a given number
+  int num;            // integer key provided by caller                 
+  bool given;         // boolean signifying a given number
 } slot_t;
 
 
@@ -250,6 +251,7 @@ void board_set(board_t *brd, int num, int row, int col)
     brd->grid[row][col]->num = num;
 }
 
+/***************** emptyLocation *****************/
 bool emptyLocation(board_t *board) {
   for (int i = 0; i < 9; i++) {
     for (int j = 0; j < 9; j++) {
@@ -261,7 +263,39 @@ bool emptyLocation(board_t *board) {
   return false;
 }
 
+/***************** board_print *****************/
+void board_print(board_t *brd)
+{
+    for (int i=0; i < 9; i++){
+        for (int j=0; j < 0; j++){
+            int num;
+            num = (brd->grid[i][j]->num);
+            if (num == 0){
+                fprintf(stderr,"[board.c, board_print] Error, slot has not been assigned a number \n");
+                exit(1);
+            } else{
+                printf("%d ", num);
+            }
+        }
+        printf("\n");
+    }
+}
 
+/***************** board_delete *****************/
+void board_delete(board_t *brd)
+{
+    for (int i=0; i < 9; i++){
+        for (int j=0; j < 0; j++){
+            count_free(brd->grid[i][j]);
+        }
+    }
+    count_free(brd);
+}
+
+/***************** board_iterate *****************/
+void board_iterate(board_t *brd, void *arg, void (*itemfunc)(void *arg, void *item) )
+{
+}
 
 int main () {
   board_t *board = board_new();
