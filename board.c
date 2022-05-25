@@ -31,6 +31,18 @@ static slot_t *slot_new(int num, bool given) {
   return slot;
 }
 
+static void slot_set(slot_t *slot, int num, bool given) {
+  slot->num = num;
+  slot->given = given;
+}
+
+
+void set_num(board_t *board, int row, int column, int num, bool given) {
+  board->grid[row][column]->num = num;
+  board->grid[row][column]->given = given;
+}
+
+
 board_t *board_new() 
 {
   board_t *board = malloc(sizeof(board_t));
