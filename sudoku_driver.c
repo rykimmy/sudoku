@@ -9,6 +9,9 @@
  * Output:
  *     'solve' -> outputs the solved sudoku puzzle
  *     'create' -> outputs a new sudoku puzzle
+ * 
+ * Assumptions:
+ *     If calling 'solve', caller will pipe a valid sudoku puzzle instead of manually entering numbers
  *
  * DataNiners: Ashley Liang, Matthew Kim, Lucy Korte, Ryan Kim
  * CS50, 22S

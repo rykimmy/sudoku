@@ -11,10 +11,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void sudoku_create() {
-
-}
-
 void sudoku_solve() {
     
+}
+
+void sudoku_create() {
+
 }
