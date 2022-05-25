@@ -35,11 +35,13 @@ board_t *board_new()
 {
   board_t *board = malloc(sizeof(board_t));
   slot_t ***row = calloc(sizeof(slot_t), 9);
+  
   for (int i = 0; i < 9; i++) {
     slot_t **column = calloc(sizeof(slot_t), 9);
     row[i] = column;
   }
   
+ 
   board->grid = row;
   for (int i = 0; i < 9; i++) {
     for (int j = 0; j < 9; j++) {
@@ -47,6 +49,8 @@ board_t *board_new()
       board->grid[i][j] = slot;
     }
   }
+  
+  
   board->grid[0][0]->num = 2;
   board->grid[1][1]->num = 5;
 
@@ -216,6 +220,18 @@ bool valid_input(board_t *board, int num, int row, int column) {
     }
   }
   return true;
+}
+
+
+bool emptyLocation(board_t *board) {
+  for (int i = 0; i < 9; i++) {
+    for (int j = 0; j < 9; j++) {
+      if (board->grid[i][j]->num == 0) {
+        return true;
+      }
+    }
+  }
+  return false;
 }
 
 
