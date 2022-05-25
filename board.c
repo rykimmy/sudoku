@@ -11,19 +11,27 @@
 #include <string.h>
 #include <stdbool.h>
 
-/**************** local types ****************/
+/////////////////////////////////
+/********** Local Types ********/
+/////////////////////////////////
 typedef struct slot {
   int num;                        // integer key provided by caller                 
   bool given;                     // boolean signifying a given number
 } slot_t;
 
 
-/**************** global types ****************/
+//////////////////////////////////
+/********** Global Types ********/
+//////////////////////////////////
 typedef struct board {
   slot_t ***grid;       
 } board_t;
 
+//////////////////////////
+/********** APIs ********/
+//////////////////////////
 
+/***************** slot_new *****************/
 static slot_t *slot_new(int num, bool given) {
   slot_t *slot = malloc(sizeof(slot_t));
   slot->num = num;
@@ -69,6 +77,7 @@ board_t *board_new()
   return board;
 }
 
+/***************** valid_input *****************/
 bool valid_input(board_t *board, int num, int row, int column) {
   // check if same number is in row
   for (int i = 0; i < 9; i++) {
@@ -234,6 +243,12 @@ bool valid_input(board_t *board, int num, int row, int column) {
   return true;
 }
 
+/***************** board_set *****************/
+void board_set(board_t *brd, int num, int row, int col)
+{
+    // assertp(brd,"[board.c, board_set] ");
+    brd->grid[row][col]->num = num;
+}
 
 bool emptyLocation(board_t *board) {
   for (int i = 0; i < 9; i++) {
