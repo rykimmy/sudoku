@@ -1,12 +1,16 @@
 /* 
- * sudoku.c - 
+ * sudoku_dirver.c - A driver to execute the sudoku module.
  * 
- * Usage: ./sudoku ['create', 'solve']
+ * Usage: ./sudoku_driver ['create', 'solve']
  * 
  * Input:
+ *     command-line arguments
+ *     sudoku puzzle (if using sudoku 'solve')
  * Output:
+ *     'solve' -> outputs the solved sudoku puzzle
+ *     'create' -> outputs a new sudoku puzzle
  *
- * Ryan Kim
+ * DataNiners: Ashley Liang, Matthew Kim, Lucy Korte, Ryan Kim
  * CS50, 22S
  */
 
