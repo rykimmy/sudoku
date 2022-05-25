@@ -1,8 +1,9 @@
 /* 
- * board.c - 'board' module for Sudoky
+ * board.c - sudoku board module
  *
+ * see board.h for more information.
  *
- * Data Niners CS50 
+ * Group 9, CS50 Spring 2022
  */
 
 #include <stdio.h>
