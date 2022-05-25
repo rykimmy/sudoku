@@ -33,18 +33,21 @@ static slot_t *slot_new(int num, bool given) {
 board_t *board_new() 
 {
   board_t *board = malloc(sizeof(board_t));
-  slot_t **row = calloc(sizeof(slot_t), 9);
-  board->grid = calloc(sizeof(row), 9);
+  slot_t ***row = calloc(sizeof(slot_t), 9);
+  for (int i = 0; i < 9; i++) {
+    slot_t **column = calloc(sizeof(slot_t), 9);
+    row[i] = column;
+  }
+  
+  board->grid = row;
   for (int i = 0; i < 9; i++) {
     for (int j = 0; j < 9; j++) {
       slot_t *slot = slot_new(0, false);
-      printf("%d\n", slot->num);
       board->grid[i][j] = slot;
-      // board->grid[i][j]->given = false;
-      // board->grid[i][j]->num = 0;
     }
   }
   board->grid[0][0]->num = 2;
+  board->grid[1][1]->num = 5;
 
   return board;
 }
@@ -217,10 +220,10 @@ bool valid_input(board_t *board, int num, int row, int column) {
 
 int main () {
   board_t *board = board_new();
-  if (valid_input(board, 2, 0, 1)) {
-    printf("problem\n");
+  if (valid_input(board, 5, 1, 2)) {
+    printf("valid input\n");
   }
   else {
-    printf("test succeeded\n");
+    printf("invalid input\n");
   }
 }
