@@ -10,7 +10,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
+#include "board.h"
 #include "libcs50/memory.h"
+
 
 /////////////////////////////////
 /********** Local Types ********/
@@ -28,8 +30,9 @@ typedef struct board {
   slot_t ***grid;       
 } board_t;
 
-/******************** local functions ********************/
-bool valid_input(board_t *board, int num, int row, int column);
+/**************** local functions ****************/
+/* not visible outside this file */
+static slot_t *slot_new(int num, bool given);
 
 //////////////////////////
 /********** APIs ********/
@@ -46,23 +49,16 @@ static slot_t *slot_new(int num, bool given) {
   return slot;
 }
 
-/***************** slot_set *****************/
-/**
- * sets slot
-**/
-// static void slot_set(slot_t *slot, int num, bool given) {
-//   slot->num = num;
-//   slot->given = given;
-// }
-
 /***************** board_set *****************/
 /**
  * sets number in slot in board
+ * Use 'row-1' and 'column-1' to account for array lists starting at 0 instead of 1.
+ * We want to input number at square 1, not square 0.
 **/
 void board_set(board_t *board, int row, int column, int num, bool given) {
-  if ((valid_input(board, num, row, column)) != false){ // validate that the board_set works
-    board->grid[row][column]->num = num;
-    board->grid[row][column]->given = given;
+  if (board != NULL){ // validate that the board_set works
+    board->grid[row-1][column-1]->num = num;
+    board->grid[row-1][column-1]->given = given;
   }
 }
 
@@ -89,9 +85,9 @@ board_t *board_new()
     }
   }
   
-  
-  board->grid[0][0]->num = 2;
-  board->grid[1][1]->num = 5;
+  // test, inputs 2 and 5 into board
+  // board->grid[0][0]->num = 2;
+  // board->grid[1][1]->num = 5;
 
   return board;
 }
@@ -287,7 +283,7 @@ bool emptyLocation(board_t *board) {
 void board_print(board_t *board)
 {
   for (int i=0; i < 9; i++){
-    for (int j=0; j < 0; j++){
+    for (int j=0; j < 9; j++){
         int num = board->grid[i][j]->num;
         if (num == 0){
             printf("* ");
@@ -317,7 +313,7 @@ void board_delete(board_t *board)
 /**
  * iterates through each slot in the board
 **/
-void board_iterate(board_t *board, void *arg, void (*itemfunc)(void *arg, slot_t *slot) )
+void board_iterate(board_t *board, void *arg, void (*itemfunc)(void *arg, slot_t *slot))
 {
   if (board != NULL && itemfunc != NULL) {
     for (int i=0; i < 9; i++){
@@ -328,6 +324,9 @@ void board_iterate(board_t *board, void *arg, void (*itemfunc)(void *arg, slot_t
   }
 }
 
+
+
+// Test
 int main () {
   board_t *board = board_new();
   if (valid_input(board, 5, 1, 2)) {
@@ -336,6 +335,7 @@ int main () {
   else {
     printf("invalid input\n");
   }
+  board_set(board, 5, 6, 5, false);
   board_print(board);
   board_delete(board);
 }
