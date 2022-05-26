@@ -62,9 +62,27 @@ void sudoku_create() {
     }
 }
 
+///////////////////////////////////////////
+/****************** solve ****************/
+///////////////////////////////////////////
+
+/***************** sudoku_solve *****************/
+/*
+Solves a sudoku puzzle.
+
+Takes:
+    nothing
+Returns:
+    true, if successfully solved
+    false, if error
+Uses:
+    build_sudoku - reads from stdin and builds the sudoku board
+    solver - recursive function that goes through and solves the puzzle
+    board_print - prints the sudoku board after it's been successfully solved
+*/
 bool sudoku_solve() {
     board_t* sudoku = build_sudoku();
-    if (sudoku_solve(sudoku)) {
+    if (solver(sudoku)) {
         board_print(sudoku);
     }
     else {
@@ -72,6 +90,15 @@ bool sudoku_solve() {
     }
 }
 
+/***************** build_sudoku *****************/
+/*
+Creates a new board struct and reads from stdin to correctly format the provided sudoku puzzle.
+
+Takes:
+    nothing
+Returns:
+    board_t* – the sudoku board filled with the given numbers
+*/
 board_t *build_sudoku() {
     board_t* sudoku = board_new();
     int num;
@@ -88,6 +115,16 @@ board_t *build_sudoku() {
     return sudoku;
 }
 
+/***************** solver *****************/
+/*
+Solver takes a non-empty non-solved sudoku board and recursively runs through each slot using a backtracking method to solve the puzzle.
+
+Takes:
+    board_t* – a pointer to a non-empty non-solved sudoku puzzle
+Returns:
+    true, if successfully solved
+    false, if error
+*/
 bool solver(board_t* sudoku)
 {
     int row, col;
