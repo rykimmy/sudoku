@@ -116,7 +116,7 @@ int board_get(board_t *board, int row, int column)
 /**
  * validates the board
 **/
-bool valid_input(board_t *board, int num, int row, int column) {
+bool valid_input(board_t *board, int row, int column, int num) {
   // check if same number is in row
 
   for (int i = 0; i < 9; i++) {
@@ -289,8 +289,8 @@ bool valid_input(board_t *board, int num, int row, int column) {
 //   return false;
 // }
 bool empty_location(board_t *board, int *row, int *col) {
-  for (*row = 0; *row < 9; *row) {
-    for (*col = 0; *col < 9; *col) {
+  for (*row = 0; *row < 9; *row++) {
+    for (*col = 0; *col < 9; *col++) {
       if (board->grid[*row][*col]->num == 0) {
         return true;
       }
@@ -352,8 +352,6 @@ void board_iterate(board_t *board, void *arg, void (*itemfunc)(void *arg, void *
 // Test
 int main () {
   board_t *board = board_new();
-  board->grid[0][0]->num = 6;
-  board->grid[0][0]->given = true;
   if (valid_input(board, 6, 0, 1)) {
     printf("valid input\n");
   }
@@ -361,9 +359,9 @@ int main () {
     printf("invalid input\n");
   }
   board_set(board, 5, 6, 5, false);
-  board_set(board, 5, 1, 5, false);
+  board_set(board, 5, 1, 4, false);
   board_print(board);
-  if (valid_input(board, 5, 5, 1)) {
+  if (valid_input(board, 5, 5, 5)) {
     printf("valid input\n");
   }
   else {

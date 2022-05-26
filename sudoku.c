@@ -12,6 +12,9 @@
 #include <stdlib.h>
 #include "board.c"
 
+bool solver(board_t* sudoku);
+board_t *build_sudoku(); 
+
 void sudoku_create() {
     
 
@@ -81,6 +84,7 @@ Uses:
     board_print - prints the sudoku board after it's been successfully solved
 */
 bool sudoku_solve() {
+void sudoku_solve() {
     board_t* sudoku = build_sudoku();
     if (solver(sudoku)) {
         board_print(sudoku);
@@ -100,6 +104,8 @@ Returns:
     board_t* – the sudoku board filled with the given numbers
 */
 board_t *build_sudoku() {
+board_t *build_sudoku() 
+{
     board_t* sudoku = board_new();
     int num;
     while (scanf("%d", &num) == 1) {

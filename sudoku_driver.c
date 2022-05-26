@@ -20,6 +20,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "sudoku.c"
 
 int main(const int argc, char *argv[]) {
     int status = 0;
@@ -34,12 +35,12 @@ int main(const int argc, char *argv[]) {
     // Solve Mode
     if (strcmp(argv[1], "solve") == 0) {
         printf("Solving sudoku puzzle\n");
-        // Run the function to solve
+        sudoku_solve();
     }
     // Create Mode
     else if (strcmp(argv[1], "create") == 0) {
         printf("Creating new sudoku puzzle\n");
-        // Run the function to create
+        sudoku_create();
     }
     // Error
     else {
