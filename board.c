@@ -117,7 +117,6 @@ bool valid_input(board_t *board, int num, int row, int column) {
   // check if same number is in box
   int row_mod = row % 3;
   int col_mod = column % 3;
-
   if (row_mod == 0) {
     if (col_mod == 0) {
       if (board->grid[row + 1][column + 1]->num == num) {
@@ -133,7 +132,6 @@ bool valid_input(board_t *board, int num, int row, int column) {
         return false;
       }
     }
-
     if (col_mod == 1) {
       if (board->grid[row + 1][column - 1]->num == num) {
         return false;
@@ -148,7 +146,6 @@ bool valid_input(board_t *board, int num, int row, int column) {
         return false;
       }
     }
-
     if (col_mod == 2) {
       if (board->grid[row + 1][column - 1]->num == num) {
         return false;
@@ -164,7 +161,6 @@ bool valid_input(board_t *board, int num, int row, int column) {
       }
     }
   }
-
   if (row_mod == 1) {
     if (col_mod == 0) {
       if (board->grid[row - 1][column + 1]->num == num) {
@@ -180,7 +176,6 @@ bool valid_input(board_t *board, int num, int row, int column) {
         return false;
       }
     }
-
     if (col_mod == 1) {
       if (board->grid[row - 1][column - 1]->num == num) {
         return false;
@@ -195,7 +190,6 @@ bool valid_input(board_t *board, int num, int row, int column) {
         return false;
       }
     }
-
     if (col_mod == 2) {
       if (board->grid[row - 1][column - 1]->num == num) {
         return false;
@@ -211,7 +205,6 @@ bool valid_input(board_t *board, int num, int row, int column) {
       }
     }
   }
-
   if (row_mod == 2) {
     if (col_mod == 0) {
       if (board->grid[row - 1][column + 1]->num == num) {
@@ -227,7 +220,6 @@ bool valid_input(board_t *board, int num, int row, int column) {
         return false;
       }
     }
-
     if (col_mod == 1) {
       if (board->grid[row - 1][column - 1]->num == num) {
         return false;
@@ -242,7 +234,6 @@ bool valid_input(board_t *board, int num, int row, int column) {
         return false;
       }
     }
-
     if (col_mod == 2) {
       if (board->grid[row - 1][column - 1]->num == num) {
         return false;
@@ -260,6 +251,7 @@ bool valid_input(board_t *board, int num, int row, int column) {
   }
   return true;
 }
+
 
 /***************** emptyLocation *****************/
 /**
@@ -329,7 +321,8 @@ void board_iterate(board_t *board, void *arg, void (*itemfunc)(void *arg, slot_t
 // Test
 int main () {
   board_t *board = board_new();
-  if (valid_input(board, 3, 0, 6)) {
+  board->grid[0][0]->num = 6;
+  if (valid_input(board, 6, 0, 1)) {
     printf("valid input\n");
   }
   else {
