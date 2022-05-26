@@ -289,8 +289,8 @@ bool valid_input(board_t *board, int row, int column, int num) {
 //   return false;
 // }
 bool empty_location(board_t *board, int *row, int *col) {
-  for (*row = 0; *row < 9; *row) {
-    for (*col = 0; *col < 9; *col) {
+  for (*row = 0; *row < 9; *row++) {
+    for (*col = 0; *col < 9; *col++) {
       if (board->grid[*row][*col]->num == 0) {
         return true;
       }
