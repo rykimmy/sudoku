@@ -12,68 +12,8 @@
 #include <stdlib.h>
 #include "board.c"
 
-void sudoku_solve(board_t* board) {
-    /*
-    1. Build sudoku puzzle from stdin
-    2. Recurse through every slot
-    */
+void sudoku_create() {
     
-}
-
-bool solve_recurse() {
-    /*
-    1. for each slot; check if it changeable or not
-        2. if changeable:
-            solve_recurse(row, col, slot):
-            int i = 1
-            while (recurse_helper(i) returns false)
-                if (i == 9), quit (error)
-                i++
-
-    */
-    slot_t* *slist[]; // holds a list of all the non-given slots in order
-
-    solve_recurse(board, row, col);
-
-    if (row == 9) {
-
-    }
-
-    for (int i = 1; i < 10; i++) {
-        if (valid_input(board, i, row, num)) {
-            if (solve_recurse(board, row, col)) {
-                board[row][col]->num = i;
-                return true;
-            }
-        }
-        
-    }
-    
-
-    if (board[row][col]->given) {
-        // go to next slot
-        if (row < 8) {
-            
-        }
-    }
-
-    while (!valid_input(board, ans, row, col)) {
-        if (ans == 9) {
-            return false;
-        }
-        ans++;
-    }
-    if (solve_recurse(board, ans, row, col)) {
-        board[row][col]->num = ans;
-        return true;
-    }
-    else {
-        solve_recurse(board, ans+1, row, col);
-    }
-
-    if (ans < 9 && solve_recurse(board, ans++, row, col)) {
-
-    }
 
 
     else if (ans < 9) {
@@ -122,27 +62,56 @@ bool solve_recurse() {
     }
 }
 
-void recurse_helper() {
-    /*
-    int i = 1
-
-    */
+bool sudoku_solve() {
+    board_t* sudoku = build_sudoku();
+    if (sudoku_solve(sudoku)) {
+        board_print(sudoku);
+    }
+    else {
+        fprintf(stderr, "sudoku not solvable");
+    }
 }
 
-sudoku_t* build_sudoku() {
-    sudoku_t* sudoku = sudoku_new();
+board_t *build_sudoku() {
+    board_t* sudoku = board_new();
     int num;
     while (scanf("%d", &num) == 1) {
         for (int i = 0; i < 9; i++) {
             for (int j = 0; j < 9; j++) {
-                //if isn't 0, meaning that it is a set number given by sudoku
+                //only need to set if not 0 because automatically 0 and false
                 if (num != 0) {
-                    slot_set(i, j, num, true);
-                }
-                else {
-                    slot_set(i, j, num, false);
+                    board_set(sudoku, i, j, num, true);
                 }
             }
         }
     }
+    return sudoku;
+}
+
+bool solver(board_t* sudoku)
+{
+    int row, col;
+
+    //goes through sudoku, checks if there are empty spots
+    //if empty, parameter keeps the row/column through param
+    if (!empty_location(sudoku, &row, &col)) {
+        return true;
+    }
+
+    //using the row/column values from empty_location()
+    for (int num = 1; num < 10; num++) {
+        if (valid_input(sudoku, row, col, num)) {
+            //tentatively set
+            board_set(sudoku, row, col, num, false);
+
+            //continue with solving, if works, return true, success
+            if (solver(sudoku)) {
+                return true;
+            }
+            //doesn't work, go back to 0
+            board_set(sudoku, row, col, 0, false);
+        }
+    }
+
+    return false;
 }
