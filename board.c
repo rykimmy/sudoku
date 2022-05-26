@@ -73,6 +73,7 @@ board_t *board_new()
   
   board->grid[0][0]->num = 2;
   board->grid[1][1]->num = 5;
+  board->grid[2][5]->num = 3;
 
   return board;
 }
@@ -265,7 +266,7 @@ bool emptyLocation(board_t *board) {
 
 int main () {
   board_t *board = board_new();
-  if (valid_input(board, 5, 1, 2)) {
+  if (valid_input(board, 3, 0, 6)) {
     printf("valid input\n");
   }
   else {
