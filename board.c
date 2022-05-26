@@ -58,10 +58,10 @@ static slot_t *slot_new(int num, bool given)
 board_t *board_new() 
 {
   board_t *board = malloc(sizeof(board_t));
-  slot_t ***row = calloc(9, sizeof(slot_t*));
+  slot_t ***row = calloc(9, sizeof(slot_t));
   
   for (int i = 0; i < 9; i++) {
-    slot_t **column = calloc(9, sizeof(slot_t*));
+    slot_t **column = calloc(9, sizeof(slot_t));
     row[i] = column;
   }
   
@@ -118,6 +118,7 @@ int board_get(board_t *board, int row, int column)
 **/
 bool valid_input(board_t *board, int row, int column, int num) {
   // check if same number is in row
+
   for (int i = 0; i < 9; i++) {
     if (i != column) {
       if (board->grid[row][i]->num == num) {
@@ -137,7 +138,6 @@ bool valid_input(board_t *board, int row, int column, int num) {
   // check if same number is in box
   int row_mod = row % 3;
   int col_mod = column % 3;
-
   if (row_mod == 0) {
     if (col_mod == 0) {
       if (board->grid[row + 1][column + 1]->num == num) {
@@ -153,7 +153,6 @@ bool valid_input(board_t *board, int row, int column, int num) {
         return false;
       }
     }
-
     if (col_mod == 1) {
       if (board->grid[row + 1][column - 1]->num == num) {
         return false;
@@ -168,7 +167,6 @@ bool valid_input(board_t *board, int row, int column, int num) {
         return false;
       }
     }
-
     if (col_mod == 2) {
       if (board->grid[row + 1][column - 1]->num == num) {
         return false;
@@ -184,7 +182,6 @@ bool valid_input(board_t *board, int row, int column, int num) {
       }
     }
   }
-
   if (row_mod == 1) {
     if (col_mod == 0) {
       if (board->grid[row - 1][column + 1]->num == num) {
@@ -200,7 +197,6 @@ bool valid_input(board_t *board, int row, int column, int num) {
         return false;
       }
     }
-
     if (col_mod == 1) {
       if (board->grid[row - 1][column - 1]->num == num) {
         return false;
@@ -215,7 +211,6 @@ bool valid_input(board_t *board, int row, int column, int num) {
         return false;
       }
     }
-
     if (col_mod == 2) {
       if (board->grid[row - 1][column - 1]->num == num) {
         return false;
@@ -231,7 +226,6 @@ bool valid_input(board_t *board, int row, int column, int num) {
       }
     }
   }
-
   if (row_mod == 2) {
     if (col_mod == 0) {
       if (board->grid[row - 1][column + 1]->num == num) {
@@ -247,7 +241,6 @@ bool valid_input(board_t *board, int row, int column, int num) {
         return false;
       }
     }
-
     if (col_mod == 1) {
       if (board->grid[row - 1][column - 1]->num == num) {
         return false;
@@ -262,7 +255,6 @@ bool valid_input(board_t *board, int row, int column, int num) {
         return false;
       }
     }
-
     if (col_mod == 2) {
       if (board->grid[row - 1][column - 1]->num == num) {
         return false;
@@ -281,7 +273,8 @@ bool valid_input(board_t *board, int row, int column, int num) {
   return true;
 }
 
-/***************** empty_location *****************/
+
+/***************** emptyLocation *****************/
 /**
  * loops through board and returns true if there is an empty slot, also keeps the row and column
 **/
@@ -359,16 +352,16 @@ void board_iterate(board_t *board, void *arg, void (*itemfunc)(void *arg, void *
 // Test
 int main () {
   board_t *board = board_new();
-  if (valid_input(board, 5, 1, 2)) {
+  if (valid_input(board, 6, 0, 1)) {
     printf("valid input\n");
   }
   else {
     printf("invalid input\n");
   }
   board_set(board, 5, 6, 5, false);
-  board_set(board, 5, 1, 5, false);
+  board_set(board, 5, 1, 4, false);
   board_print(board);
-  if (valid_input(board, 5, 5, 1)) {
+  if (valid_input(board, 5, 5, 5)) {
     printf("valid input\n");
   }
   else {
