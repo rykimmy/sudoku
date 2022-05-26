@@ -12,14 +12,17 @@
 #include <stdlib.h>
 #include "board.h"
 
+bool solver(board_t* sudoku);
+board_t *build_sudoku(); 
+
 void sudoku_create() {
     
 
 }
 
-bool sudoku_solve() {
+void sudoku_solve() {
     board_t* sudoku = build_sudoku();
-    if (sudoku_solve(sudoku)) {
+    if (solver(sudoku)) {
         board_print(sudoku);
     }
     else {
@@ -27,7 +30,8 @@ bool sudoku_solve() {
     }
 }
 
-board_t *build_sudoku() {
+board_t *build_sudoku() 
+{
     board_t* sudoku = board_new();
     int num;
     while (scanf("%d", &num) == 1) {
