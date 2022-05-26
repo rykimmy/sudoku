@@ -58,10 +58,10 @@ static slot_t *slot_new(int num, bool given)
 board_t *board_new() 
 {
   board_t *board = malloc(sizeof(board_t));
-  slot_t ***row = calloc(9, sizeof(slot_t*));
+  slot_t ***row = calloc(9, sizeof(slot_t));
   
   for (int i = 0; i < 9; i++) {
-    slot_t **column = calloc(9, sizeof(slot_t*));
+    slot_t **column = calloc(9, sizeof(slot_t));
     row[i] = column;
   }
   
@@ -116,8 +116,9 @@ int board_get(board_t *board, int row, int column)
 /**
  * validates the board
 **/
-bool valid_input(board_t *board, int row, int column, int num) {
+bool valid_input(board_t *board, int num, int row, int column) {
   // check if same number is in row
+
   for (int i = 0; i < 9; i++) {
     if (i != column) {
       if (board->grid[row][i]->num == num) {
@@ -352,6 +353,7 @@ void board_iterate(board_t *board, void *arg, void (*itemfunc)(void *arg, void *
 int main () {
   board_t *board = board_new();
   board->grid[0][0]->num = 6;
+  board->grid[0][0]->given = true;
   if (valid_input(board, 6, 0, 1)) {
     printf("valid input\n");
   }
