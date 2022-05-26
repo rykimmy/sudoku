@@ -58,7 +58,7 @@ static slot_t *slot_new(int num, bool given) {
 void board_set(board_t *board, int row, int column, int num, bool given) {
   if (board != NULL){ // validate that the board_set works
     //validate that the row and column are within boundaries
-    if (row > -1 && row < 9 && column > -1 && column < 9) {
+    if (row > -1 && row < 9 && column > -1 && column < 9 && num > 0 && num < 10) {
       board->grid[row-1][column-1]->num = num;
       board->grid[row-1][column-1]->given = given;
     }
@@ -339,7 +339,8 @@ int main () {
     printf("invalid input\n");
   }
   board_set(board, 5, 6, 5, false);
-    board_print(board);
+  board_set(board, 5, 1, 5, false);
+  board_print(board);
   if (valid_input(board, 5, 5, 1)) {
     printf("valid input\n");
   }

@@ -20,7 +20,7 @@ void sudoku_create() {
 void sudoku_solve() {
     board_t* sudoku = build_sudoku();
 
-    while (empty_location) {
+    while (empty_location(sudoku)) {
         
     }
 }
