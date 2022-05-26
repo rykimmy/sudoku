@@ -48,7 +48,7 @@ int board_get(board_t *board, int row, int column);
 /***************** valid_input *****************/
 /* 
  */
-bool valid_input(board_t *board, int row, int column, int num);
+bool valid_input(board_t *board, int num, int row, int column);
 
 /***************** emptyLocation *****************/
 bool empty_location(board_t *board, int *row, int *col);
