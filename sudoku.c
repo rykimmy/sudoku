@@ -13,27 +13,60 @@
 #include "board.h"
 
 void sudoku_create() {
+    
 
 }
 
-void sudoku_solve() {
-  
+bool sudoku_solve() {
+    board_t* sudoku = build_sudoku();
+    if (sudoku_solve(sudoku)) {
+        board_print(sudoku);
+    }
+    else {
+        fprintf(stderr, "sudoku not solvable");
+    }
 }
 
-*sudoku_t build_sudoku() {
-    sudoku_t* sudoku = sudoku_new();
+board_t *build_sudoku() {
+    board_t* sudoku = board_new();
     int num;
     while (scanf("%d", &num) == 1) {
         for (int i = 0; i < 9; i++) {
             for (int j = 0; j < 9; j++) {
-                //if isn't 0, meaning that it is a set number given by sudoku
+                //only need to set if not 0 because automatically 0 and false
                 if (num != 0) {
-                    slot_set(i, j, num, true);
-                }
-                else {
-                    slot_set(i, j, num, false);
+                    board_set(sudoku, i, j, num, true);
                 }
             }
         }
     }
+    return sudoku;
+}
+
+bool solver(board_t* sudoku)
+{
+    int row, col;
+
+    //goes through sudoku, checks if there are empty spots
+    //if empty, parameter keeps the row/column through param
+    if (!empty_location(sudoku, &row, &col)) {
+        return true;
+    }
+
+    //using the row/column values from empty_location()
+    for (int num = 1; num < 10; num++) {
+        if (valid_input(sudoku, row, col, num)) {
+            //tentatively set
+            board_set(sudoku, row, col, num, false);
+
+            //continue with solving, if works, return true, success
+            if (solver(sudoku)) {
+                return true;
+            }
+            //doesn't work, go back to 0
+            board_set(sudoku, row, col, 0, false);
+        }
+    }
+
+    return false;
 }
