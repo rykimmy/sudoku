@@ -28,11 +28,17 @@ typedef struct board {
   slot_t ***grid;       
 } board_t;
 
+/******************** local functions ********************/
+bool valid_input(board_t *board, int num, int row, int column);
+
 //////////////////////////
 /********** APIs ********/
 //////////////////////////
 
 /***************** slot_new *****************/
+/**
+ * builds slot
+**/
 static slot_t *slot_new(int num, bool given) {
   slot_t *slot = malloc(sizeof(slot_t));
   slot->num = num;
@@ -40,25 +46,37 @@ static slot_t *slot_new(int num, bool given) {
   return slot;
 }
 
-static void slot_set(slot_t *slot, int num, bool given) {
-  slot->num = num;
-  slot->given = given;
+/***************** slot_set *****************/
+/**
+ * sets slot
+**/
+// static void slot_set(slot_t *slot, int num, bool given) {
+//   slot->num = num;
+//   slot->given = given;
+// }
+
+/***************** board_set *****************/
+/**
+ * sets number in slot in board
+**/
+void board_set(board_t *board, int row, int column, int num, bool given) {
+  if ((valid_input(board, num, row, column)) != false){ // validate that the board_set works
+    board->grid[row][column]->num = num;
+    board->grid[row][column]->given = given;
+  }
 }
 
-
-void set_num(board_t *board, int row, int column, int num, bool given) {
-  board->grid[row][column]->num = num;
-  board->grid[row][column]->given = given;
-}
-
-
+/***************** board_new *****************/
+/**
+ * builds board and calls slot_new on each slot
+**/
 board_t *board_new() 
 {
   board_t *board = malloc(sizeof(board_t));
-  slot_t ***row = calloc(sizeof(slot_t), 9);
+  slot_t ***row = calloc(9, sizeof(slot_t));
   
   for (int i = 0; i < 9; i++) {
-    slot_t **column = calloc(sizeof(slot_t), 9);
+    slot_t **column = calloc(9, sizeof(slot_t));
     row[i] = column;
   }
   
@@ -79,6 +97,9 @@ board_t *board_new()
 }
 
 /***************** valid_input *****************/
+/**
+ * validates the board
+**/
 bool valid_input(board_t *board, int num, int row, int column) {
   // check if same number is in row
   for (int i = 0; i < 9; i++) {
@@ -244,14 +265,10 @@ bool valid_input(board_t *board, int num, int row, int column) {
   return true;
 }
 
-/***************** board_set *****************/
-void board_set(board_t *brd, int num, int row, int col)
-{
-    // assertp(brd,"[board.c, board_set] ");
-    brd->grid[row][col]->num = num;
-}
-
 /***************** emptyLocation *****************/
+/**
+ * loops through board and returns true if there is an empty slot
+**/
 bool emptyLocation(board_t *board) {
   for (int i = 0; i < 9; i++) {
     for (int j = 0; j < 9; j++) {
@@ -264,37 +281,51 @@ bool emptyLocation(board_t *board) {
 }
 
 /***************** board_print *****************/
-void board_print(board_t *brd)
+/**
+ * prints the board, uses '*' for an empty slot
+**/
+void board_print(board_t *board)
 {
-    for (int i=0; i < 9; i++){
-        for (int j=0; j < 0; j++){
-            int num;
-            num = (brd->grid[i][j]->num);
-            if (num == 0){
-                fprintf(stderr,"[board.c, board_print] Error, slot has not been assigned a number \n");
-                exit(1);
-            } else{
-                printf("%d ", num);
-            }
+  for (int i=0; i < 9; i++){
+    for (int j=0; j < 0; j++){
+        int num = board->grid[i][j]->num;
+        if (num == 0){
+            printf("* ");
+        } else{
+            printf("%d ", num);
         }
-        printf("\n");
     }
+    printf("\n");
+  }
 }
 
 /***************** board_delete *****************/
-void board_delete(board_t *brd)
+/**
+ * Deletes each slot, then deletes the board
+**/
+void board_delete(board_t *board)
 {
     for (int i=0; i < 9; i++){
         for (int j=0; j < 0; j++){
-            count_free(brd->grid[i][j]);
+            free(board->grid[i][j]);
         }
     }
-    count_free(brd);
+    free(board);
 }
 
 /***************** board_iterate *****************/
-void board_iterate(board_t *brd, void *arg, void (*itemfunc)(void *arg, void *item) )
+/**
+ * iterates through each slot in the board
+**/
+void board_iterate(board_t *board, void *arg, void (*itemfunc)(void *arg, slot_t *slot) )
 {
+  if (board != NULL && itemfunc != NULL) {
+    for (int i=0; i < 9; i++){
+      for (int j=0; j < 9; j++){
+        (*itemfunc)(arg, board->grid[i][j]);
+      }
+    }
+  }
 }
 
 int main () {
@@ -305,4 +336,6 @@ int main () {
   else {
     printf("invalid input\n");
   }
+  board_print(board);
+  board_delete(board);
 }
