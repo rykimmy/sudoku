@@ -13,27 +13,30 @@
 #include "board.h"
 
 void sudoku_create() {
+    
 
 }
 
 void sudoku_solve() {
-  
+    board_t* sudoku = build_sudoku();
+
+    while (empty_location) {
+        
+    }
 }
 
-*sudoku_t build_sudoku() {
-    sudoku_t* sudoku = sudoku_new();
+board_t *build_sudoku() {
+    board_t* sudoku = board_new();
     int num;
     while (scanf("%d", &num) == 1) {
         for (int i = 0; i < 9; i++) {
             for (int j = 0; j < 9; j++) {
-                //if isn't 0, meaning that it is a set number given by sudoku
+                //only need to set if not 0 because automatically 0 and false
                 if (num != 0) {
-                    slot_set(i, j, num, true);
-                }
-                else {
-                    slot_set(i, j, num, false);
+                    board_set(sudoku, i, j, num, true);
                 }
             }
         }
     }
+    return sudoku;
 }

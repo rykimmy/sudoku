@@ -57,8 +57,11 @@ static slot_t *slot_new(int num, bool given) {
 **/
 void board_set(board_t *board, int row, int column, int num, bool given) {
   if (board != NULL){ // validate that the board_set works
-    board->grid[row-1][column-1]->num = num;
-    board->grid[row-1][column-1]->given = given;
+    //validate that the row and column are within boundaries
+    if (row > -1 && row < 9 && column > -1 && column < 9) {
+      board->grid[row-1][column-1]->num = num;
+      board->grid[row-1][column-1]->given = given;
+    }
   }
 }
 
@@ -69,10 +72,10 @@ void board_set(board_t *board, int row, int column, int num, bool given) {
 board_t *board_new() 
 {
   board_t *board = malloc(sizeof(board_t));
-  slot_t ***row = calloc(9, sizeof(slot_t));
+  slot_t ***row = calloc(9, sizeof(slot_t*));
   
   for (int i = 0; i < 9; i++) {
-    slot_t **column = calloc(9, sizeof(slot_t));
+    slot_t **column = calloc(9, sizeof(slot_t*));
     row[i] = column;
   }
   
@@ -261,11 +264,11 @@ bool valid_input(board_t *board, int num, int row, int column) {
   return true;
 }
 
-/***************** emptyLocation *****************/
+/***************** empty_location *****************/
 /**
  * loops through board and returns true if there is an empty slot
 **/
-bool emptyLocation(board_t *board) {
+bool empty_location(board_t *board) {
   for (int i = 0; i < 9; i++) {
     for (int j = 0; j < 9; j++) {
       if (board->grid[i][j]->num == 0) {
@@ -286,7 +289,7 @@ void board_print(board_t *board)
     for (int j=0; j < 9; j++){
         int num = board->grid[i][j]->num;
         if (num == 0){
-            printf("* ");
+            printf("0 ");
         } else{
             printf("%d ", num);
         }
@@ -313,7 +316,7 @@ void board_delete(board_t *board)
 /**
  * iterates through each slot in the board
 **/
-void board_iterate(board_t *board, void *arg, void (*itemfunc)(void *arg, slot_t *slot))
+void board_iterate(board_t *board, void *arg, void (*itemfunc)(void *arg, void *slot))
 {
   if (board != NULL && itemfunc != NULL) {
     for (int i=0; i < 9; i++){
@@ -336,6 +339,12 @@ int main () {
     printf("invalid input\n");
   }
   board_set(board, 5, 6, 5, false);
-  board_print(board);
+    board_print(board);
+  if (valid_input(board, 5, 5, 1)) {
+    printf("valid input\n");
+  }
+  else {
+    printf("invalid input\n");
+  }
   board_delete(board);
 }
