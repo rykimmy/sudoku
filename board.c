@@ -42,28 +42,14 @@ static slot_t *slot_new(int num, bool given);
 /**
  * builds slot
 **/
-static slot_t *slot_new(int num, bool given) {
+static slot_t *slot_new(int num, bool given) 
+{
   slot_t *slot = malloc(sizeof(slot_t));
   slot->num = num;
   slot->given = given;
   return slot;
 }
 
-/***************** board_set *****************/
-/**
- * sets number in slot in board
- * Use 'row-1' and 'column-1' to account for array lists starting at 0 instead of 1.
- * We want to input number at square 1, not square 0.
-**/
-void board_set(board_t *board, int row, int column, int num, bool given) {
-  if (board != NULL){ // validate that the board_set works
-    //validate that the row and column are within boundaries
-    if (row > -1 && row < 9 && column > -1 && column < 9 && num > 0 && num < 10) {
-      board->grid[row-1][column-1]->num = num;
-      board->grid[row-1][column-1]->given = given;
-    }
-  }
-}
 
 /***************** board_new *****************/
 /**
@@ -95,11 +81,42 @@ board_t *board_new()
   return board;
 }
 
+/***************** board_set *****************/
+/**
+ * sets number in slot in board
+**/
+void board_set(board_t *board, int row, int column, int num, bool given) 
+{
+  if (board != NULL){ // validate that the board_set works
+    //validate that the row and column are within boundaries
+    if (row > -1 && row < 9 && column > -1 && column < 9 && num > 0 && num < 10) {
+      board->grid[row][column]->num = num;
+      board->grid[row][column]->given = given;
+    }
+  }
+}
+
+
+/***************** board_get *****************/
+/**
+ * gets number in slot in board
+**/
+int board_get(board_t *board, int row, int column) 
+{
+  if (board == NULL) {
+    return -1;
+  }
+  if (row < 0 || row > 8 || column < 0 || column > 8) {
+    return -1;
+  }
+  return board->grid[row][column]->num;
+}
+
 /***************** valid_input *****************/
 /**
  * validates the board
 **/
-bool valid_input(board_t *board, int num, int row, int column) {
+bool valid_input(board_t *board, int row, int column, int num) {
   // check if same number is in row
   for (int i = 0; i < 9; i++) {
     if (i != column) {
@@ -266,12 +283,22 @@ bool valid_input(board_t *board, int num, int row, int column) {
 
 /***************** empty_location *****************/
 /**
- * loops through board and returns true if there is an empty slot
+ * loops through board and returns true if there is an empty slot, also keeps the row and column
 **/
-bool empty_location(board_t *board) {
-  for (int i = 0; i < 9; i++) {
-    for (int j = 0; j < 9; j++) {
-      if (board->grid[i][j]->num == 0) {
+// bool empty_location(board_t *board) {
+//   for (int i = 0; i < 9; i++) {
+//     for (int j = 0; j < 9; j++) {
+//       if (board->grid[i][j]->num == 0) {
+//         return true;
+//       }
+//     }
+//   }
+//   return false;
+// }
+bool empty_location(board_t *board, int *row, int *col) {
+  for (*row = 0; *row < 9; *row) {
+    for (*col = 0; *col < 9; *col) {
+      if (board->grid[*row][*col]->num == 0) {
         return true;
       }
     }

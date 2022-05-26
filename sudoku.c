@@ -17,11 +17,13 @@ void sudoku_create() {
 
 }
 
-void sudoku_solve() {
+bool sudoku_solve() {
     board_t* sudoku = build_sudoku();
-
-    while (empty_location(sudoku)) {
-        
+    if (sudoku_solve(sudoku)) {
+        board_print(sudoku);
+    }
+    else {
+        fprintf(stderr, "sudoku not solvable");
     }
 }
 
@@ -39,4 +41,32 @@ board_t *build_sudoku() {
         }
     }
     return sudoku;
+}
+
+bool solver(board_t* sudoku)
+{
+    int row, col;
+
+    //goes through sudoku, checks if there are empty spots
+    //if empty, parameter keeps the row/column through param
+    if (!empty_location(sudoku, &row, &col)) {
+        return true;
+    }
+
+    //using the row/column values from empty_location()
+    for (int num = 1; num < 10; num++) {
+        if (valid_input(sudoku, row, col, num)) {
+            //tentatively set
+            board_set(sudoku, row, col, num, false);
+
+            //continue with solving, if works, return true, success
+            if (solver(sudoku)) {
+                return true;
+            }
+            //doesn't work, go back to 0
+            board_set(sudoku, row, col, 0, false);
+        }
+    }
+
+    return false;
 }
