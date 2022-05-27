@@ -12,10 +12,19 @@
 #include <stdlib.h>
 #include "board.h"
 
-bool solver(board_t* sudoku);
-board_t *build_sudoku(); 
+/**************** global functions ****************/
+/* that is, visible outside this file */
+/* see counters.h for comments about exported functions */
 
-// void sudoku_create() {
+/**************** local functions ****************/
+/* not visible outside this file */
+static bool solver(board_t* sudoku);
+static board_t *build_sudoku(); 
+
+
+
+void sudoku_create() 
+{
     
 
 
@@ -63,7 +72,7 @@ board_t *build_sudoku();
 //     else {
 //         solve_recurse(board, ans++, row, col);
 //     }
-// }
+}
 
 ///////////////////////////////////////////
 /****************** solve ****************/
@@ -84,7 +93,8 @@ Uses:
     board_print - prints the sudoku board after it's been successfully solved
 */
 
-void sudoku_solve() {
+void sudoku_solve() 
+{
     board_t* sudoku = build_sudoku();
     if (solver(sudoku)) {
         board_print(sudoku);
@@ -103,7 +113,7 @@ Takes:
 Returns:
     board_t* – the sudoku board filled with the given numbers
 */
-board_t *build_sudoku() 
+static board_t *build_sudoku() 
 {
     board_t* sudoku = board_new();
     int num;
@@ -131,7 +141,7 @@ Returns:
     true, if successfully solved
     false, if error
 */
-bool solver(board_t* sudoku)
+static bool solver(board_t* sudoku)
 {
     int row, col;
 
