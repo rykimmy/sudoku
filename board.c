@@ -89,10 +89,10 @@ void board_set(board_t *board, int row, int column, int num, bool given)
 {
   if (board != NULL){ // validate that the board_set works
     //validate that the row and column are within boundaries
-    if (row > -1 && row < 9 && column > -1 && column < 9 && num > 0 && num < 10) {
+    
       board->grid[row][column]->num = num;
       board->grid[row][column]->given = given;
-    }
+    
   }
 }
 
@@ -126,8 +126,8 @@ bool valid_input(board_t *board, int row, int column, int num) {
       }
     }
   }
+  // check if same number is in column
   for (int j = 0; j < 9; j++) {
-    // check if same number is in column
     if (j != row) {
       if (board->grid[j][column]->num == num) {
         return false;
@@ -138,134 +138,12 @@ bool valid_input(board_t *board, int row, int column, int num) {
   // check if same number is in box
   int row_mod = row % 3;
   int col_mod = column % 3;
-  if (row_mod == 0) {
-    if (col_mod == 0) {
-      if (board->grid[row + 1][column + 1]->num == num) {
-        return false;
+  for (int a = 0; a < 3; a++) {
+    for (int b = 0; b < 3; b++) {
+      if ((a + row - row_mod == row) && (b + column - col_mod == column)) {
+        continue;
       }
-      if (board->grid[row + 1][column + 2]->num == num) {
-        return false;
-      }
-      if (board->grid[row + 2][column + 1]->num == num) {
-        return false;
-      }
-      if (board->grid[row + 2][column + 2]->num == num) {
-        return false;
-      }
-    }
-    if (col_mod == 1) {
-      if (board->grid[row + 1][column - 1]->num == num) {
-        return false;
-      }
-      if (board->grid[row + 1][column + 1]->num == num) {
-        return false;
-      }
-      if (board->grid[row + 2][column - 1]->num == num) {
-        return false;
-      }
-      if (board->grid[row + 2][column + 1]->num == num) {
-        return false;
-      }
-    }
-    if (col_mod == 2) {
-      if (board->grid[row + 1][column - 1]->num == num) {
-        return false;
-      }
-      if (board->grid[row + 1][column - 2]->num == num) {
-        return false;
-      }
-      if (board->grid[row + 2][column - 1]->num == num) {
-        return false;
-      }
-      if (board->grid[row + 2][column - 2]->num == num) {
-        return false;
-      }
-    }
-  }
-  if (row_mod == 1) {
-    if (col_mod == 0) {
-      if (board->grid[row - 1][column + 1]->num == num) {
-        return false;
-      }
-      if (board->grid[row - 1][column + 2]->num == num) {
-        return false;
-      }
-      if (board->grid[row + 1][column + 1]->num == num) {
-        return false;
-      }
-      if (board->grid[row + 1][column + 2]->num == num) {
-        return false;
-      }
-    }
-    if (col_mod == 1) {
-      if (board->grid[row - 1][column - 1]->num == num) {
-        return false;
-      }
-      if (board->grid[row - 1][column + 1]->num == num) {
-        return false;
-      }
-      if (board->grid[row + 1][column - 1]->num == num) {
-        return false;
-      }
-      if (board->grid[row + 1][column + 1]->num == num) {
-        return false;
-      }
-    }
-    if (col_mod == 2) {
-      if (board->grid[row - 1][column - 1]->num == num) {
-        return false;
-      }
-      if (board->grid[row - 1][column - 2]->num == num) {
-        return false;
-      }
-      if (board->grid[row + 1][column - 1]->num == num) {
-        return false;
-      }
-      if (board->grid[row + 1][column - 2]->num == num) {
-        return false;
-      }
-    }
-  }
-  if (row_mod == 2) {
-    if (col_mod == 0) {
-      if (board->grid[row - 1][column + 1]->num == num) {
-        return false;
-      }
-      if (board->grid[row - 1][column + 2]->num == num) {
-        return false;
-      }
-      if (board->grid[row - 2][column + 1]->num == num) {
-        return false;
-      }
-      if (board->grid[row - 2][column + 2]->num == num) {
-        return false;
-      }
-    }
-    if (col_mod == 1) {
-      if (board->grid[row - 1][column - 1]->num == num) {
-        return false;
-      }
-      if (board->grid[row - 1][column + 1]->num == num) {
-        return false;
-      }
-      if (board->grid[row - 2][column - 1]->num == num) {
-        return false;
-      }
-      if (board->grid[row - 2][column + 1]->num == num) {
-        return false;
-      }
-    }
-    if (col_mod == 2) {
-      if (board->grid[row - 1][column - 1]->num == num) {
-        return false;
-      }
-      if (board->grid[row - 1][column - 2]->num == num) {
-        return false;
-      }
-      if (board->grid[row - 2][column - 1]->num == num) {
-        return false;
-      }
-      if (board->grid[row - 2][column - 2]->num == num) {
+      if (board->grid[a + row - row_mod][b + column - col_mod]->num == num) {
         return false;
       }
     }
@@ -274,23 +152,10 @@ bool valid_input(board_t *board, int row, int column, int num) {
 }
 
 
-/***************** emptyLocation *****************/
-/**
- * loops through board and returns true if there is an empty slot, also keeps the row and column
-**/
-// bool empty_location(board_t *board) {
-//   for (int i = 0; i < 9; i++) {
-//     for (int j = 0; j < 9; j++) {
-//       if (board->grid[i][j]->num == 0) {
-//         return true;
-//       }
-//     }
-//   }
-//   return false;
-// }
+
 bool empty_location(board_t *board, int *row, int *col) {
-  for (*row = 0; *row < 9; *row) {
-    for (*col = 0; *col < 9; *col) {
+  for (*row = 0; *row < 9; (*row)++) {
+    for (*col = 0; *col < 9; (*col)++) {
       if (board->grid[*row][*col]->num == 0) {
         return true;
       }
@@ -349,23 +214,6 @@ void board_iterate(board_t *board, void *arg, void (*itemfunc)(void *arg, void *
 
 
 
-// Test
-int main () {
-  board_t *board = board_new();
-  if (valid_input(board, 6, 0, 1)) {
-    printf("valid input\n");
-  }
-  else {
-    printf("invalid input\n");
-  }
-  board_set(board, 5, 6, 5, false);
-  board_set(board, 5, 1, 4, false);
-  board_print(board);
-  if (valid_input(board, 5, 5, 5)) {
-    printf("valid input\n");
-  }
-  else {
-    printf("invalid input\n");
-  }
-  board_delete(board);
-}
+
+
+

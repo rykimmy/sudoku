@@ -45,9 +45,8 @@ board_t *board_new();
 void board_set(board_t *board, int row, int column, int num, bool given);
 
 int board_get(board_t *board, int row, int column);
+
 /***************** valid_input *****************/
-/* 
- */
 bool valid_input(board_t *board, int row, int column, int num);
 
 /***************** emptyLocation *****************/
