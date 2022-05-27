@@ -3,7 +3,8 @@
  *
  * see board.h for more information.
  *
- * Group 9, CS50 Spring 2022
+ * CS50 Spring 2022
+ * DataNiners: Ashley Liang, Matthew Kim, Lucy Korte, Ryan Kim
  */
 
 #include <stdio.h>
