@@ -1,0 +1,4 @@
+board
+*.o
+sudoku
+sudoku_driver
