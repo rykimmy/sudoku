@@ -10,7 +10,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "board.c"
+#include "board.h"
 
 bool solver(board_t* sudoku);
 board_t *build_sudoku(); 
@@ -107,9 +107,9 @@ board_t *build_sudoku()
 {
     board_t* sudoku = board_new();
     int num;
-    while (scanf("%d", &num) == 1) {
-        for (int i = 0; i < 9; i++) {
-            for (int j = 0; j < 9; j++) {
+    for (int i = 0; i < 9; i++) {
+        for (int j = 0; j < 9; j++) {
+            if (scanf("%d", &num) == 1) {
                 //only need to set if not 0 because automatically 0 and false
                 if (num != 0) {
                     board_set(sudoku, i, j, num, true);
@@ -117,6 +117,7 @@ board_t *build_sudoku()
             }
         }
     }
+
     return sudoku;
 }
 
