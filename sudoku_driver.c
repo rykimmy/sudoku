@@ -20,9 +20,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "sudoku.c"
+#include "sudoku.h"
 
-int main(const int argc, char *argv[]) {
+int main(const int argc, char *argv[]) 
+{
     int status = 0;
 
     // Error checking --> number of arguments
