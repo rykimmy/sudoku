@@ -15,55 +15,55 @@
 bool solver(board_t* sudoku);
 board_t *build_sudoku(); 
 
-void sudoku_create() {
+// void sudoku_create() {
     
 
 
-    else if (ans < 9) {
-        solve_recurse(board, ans++, )
-    }
+//     else if (ans < 9) {
+//         solve_recurse(board, ans++, )
+//     }
 
-    if (valid_input(board, ans, row, col) && row == 8 && col == 8) {
-        return true;
-    }
+//     if (valid_input(board, ans, row, col) && row == 8 && col == 8) {
+//         return true;
+//     }
 
 
     
-    while (!valid_input(board, ans, row, col)) {
-        if (ans == 9) {
-            return false;
-        }
-        ans++
-    }
+//     while (!valid_input(board, ans, row, col)) {
+//         if (ans == 9) {
+//             return false;
+//         }
+//         ans++
+//     }
 
-    if (row < 8) {
-        solve_recurse(board, 1, row++, col);
-    }
-    else if (col < 8) {
-        solve_recurse(board, 1, 0, col++);
-    }
-    else {
+//     if (row < 8) {
+//         solve_recurse(board, 1, row++, col);
+//     }
+//     else if (col < 8) {
+//         solve_recurse(board, 1, 0, col++);
+//     }
+//     else {
 
-    }
-    solve_recurse(board, 1, row++)
+//     }
+//     solve_recurse(board, 1, row++)
 
 
 
-    if (valid_input(board, ans, row, col)) {
-        if (row == 8 && col == 8) {
-            return true;
-        }
-        if (row < 9) {
-            solve_recurse(board, 1, row++, col);
-        }
-        else if (col < 9) {
-            solve_recurse(board, 1, 0, col++)
-        }
-    }
-    else {
-        solve_recurse(board, ans++, row, col);
-    }
-}
+//     if (valid_input(board, ans, row, col)) {
+//         if (row == 8 && col == 8) {
+//             return true;
+//         }
+//         if (row < 9) {
+//             solve_recurse(board, 1, row++, col);
+//         }
+//         else if (col < 9) {
+//             solve_recurse(board, 1, 0, col++)
+//         }
+//     }
+//     else {
+//         solve_recurse(board, ans++, row, col);
+//     }
+// }
 
 ///////////////////////////////////////////
 /****************** solve ****************/
@@ -83,7 +83,7 @@ Uses:
     solver - recursive function that goes through and solves the puzzle
     board_print - prints the sudoku board after it's been successfully solved
 */
-bool sudoku_solve() {
+
 void sudoku_solve() {
     board_t* sudoku = build_sudoku();
     if (solver(sudoku)) {
@@ -103,7 +103,6 @@ Takes:
 Returns:
     board_t* – the sudoku board filled with the given numbers
 */
-board_t *build_sudoku() {
 board_t *build_sudoku() 
 {
     board_t* sudoku = board_new();
