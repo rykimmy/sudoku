@@ -279,16 +279,17 @@ bool valid_input(board_t *board, int row, int column, int num) {
 /**
  * loops through board and returns true if there is an empty slot, also keeps the row and column
 **/
-bool empty_location(board_t *board, int *row, int *col) {
-  for (*row = 0; *row < 9; *row++) {
-    for (*col = 0; *col < 9; *col++) {
-      if (board->grid[*row][*col]->num == 0) {
-        return true;
-      }
-    }
-  }
-  return false;
-}
+// bool empty_location(board_t *board, int *row, int *col) {
+//   for (*row = 0; *row < 9; *row++) {
+//     for (*col = 0; *col < 9; *col++) {
+//       if (board->grid[*row][*col]->num == 0) {
+//         printf("part 1: %d, %d", *row, *col);
+//         return true;
+//       }
+//     }
+//   }
+//   return false;
+// }
 
 /***************** board_print *****************/
 /**
@@ -338,25 +339,32 @@ void board_iterate(board_t *board, void *arg, void (*itemfunc)(void *arg, void *
   }
 }
 
+board_t *build_sudoku() 
+{
+    board_t* sudoku = board_new();
+    int num;
+      for (int i = 0; i < 9; i++) {
+          for (int j = 0; j < 9; j++) {
+              //only need to set if not 0 because automatically 0 and false
+              if (scanf("%d", &num) == 1) {
+                  board_set(sudoku, i, j, num, true);
+              }
+          }
+      }
+    return sudoku;
+}
 
 
 // Test
 int main () {
-  board_t *board = board_new();
-  if (valid_input(board, 6, 0, 1)) {
-    printf("valid input\n");
-  }
-  else {
-    printf("invalid input\n");
-  }
-  board_set(board, 5, 6, 5, false);
-  board_set(board, 5, 1, 4, false);
+  board_t *board = build_sudoku();
   board_print(board);
-  if (valid_input(board, 5, 5, 5)) {
-    printf("valid input\n");
-  }
-  else {
-    printf("invalid input\n");
-  }
-  board_delete(board);
+  // board_print(board);
+  // if (valid_input(board, 5, 5, 5)) {
+  //   printf("valid input\n");
+  // }
+  // else {
+  //   printf("invalid input\n");
+  // }
+  // board_delete(board);
 }

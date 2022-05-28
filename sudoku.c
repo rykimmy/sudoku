@@ -12,6 +12,10 @@
 #include <stdlib.h>
 #include "board.c"
 
+//////////////////////////////////////
+/********** Helper Functions ********/
+//////////////////////////////////////
+
 bool solver(board_t* sudoku);
 board_t *build_sudoku(); 
 
@@ -83,7 +87,6 @@ Uses:
     solver - recursive function that goes through and solves the puzzle
     board_print - prints the sudoku board after it's been successfully solved
 */
-bool sudoku_solve() {
 void sudoku_solve() {
     board_t* sudoku = build_sudoku();
     if (solver(sudoku)) {
@@ -103,7 +106,6 @@ Takes:
 Returns:
     board_t* – the sudoku board filled with the given numbers
 */
-board_t *build_sudoku() {
 board_t *build_sudoku() 
 {
     board_t* sudoku = board_new();
