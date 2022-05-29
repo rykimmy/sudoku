@@ -11,116 +11,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-#include "board.c"
-
-bool solver(board_t* sudoku);
-board_t *build_sudoku(); 
-
-void sudoku_create() {
-    
-
-
-    else if (ans < 9) {
-        solve_recurse(board, ans++, )
-    }
-
-    if (valid_input(board, ans, row, col) && row == 8 && col == 8) {
-        return true;
-    }
-
-
-    
-    while (!valid_input(board, ans, row, col)) {
-        if (ans == 9) {
-            return false;
-        }
-        ans++
-    }
-
-    if (row < 8) {
-        solve_recurse(board, 1, row++, col);
-    }
-    else if (col < 8) {
-        solve_recurse(board, 1, 0, col++);
-    }
-    else {
-
-    }
-    solve_recurse(board, 1, row++)
-
-
-
-    if (valid_input(board, ans, row, col)) {
-        if (row == 8 && col == 8) {
-            return true;
-        }
-        if (row < 9) {
-            solve_recurse(board, 1, row++, col);
-        }
-        else if (col < 9) {
-            solve_recurse(board, 1, 0, col++)
-        }
-    }
-    else {
-        solve_recurse(board, ans++, row, col);
-    }
-}
+#include "board.h"
 
 ///////////////////////////////////////////
-/****************** solve ****************/
+/****************** Solve ****************/
 ///////////////////////////////////////////
-
-/***************** sudoku_solve *****************/
-/*
-Solves a sudoku puzzle.
-
-Takes:
-    nothing
-Returns:
-    true, if successfully solved
-    false, if error
-Uses:
-    build_sudoku - reads from stdin and builds the sudoku board
-    solver - recursive function that goes through and solves the puzzle
-    board_print - prints the sudoku board after it's been successfully solved
-*/
-bool sudoku_solve() {
-void sudoku_solve() {
-    board_t* sudoku = build_sudoku();
-    if (solver(sudoku)) {
-        board_print(sudoku);
-    }
-    else {
-        fprintf(stderr, "sudoku not solvable");
-    }
-}
-
-/***************** build_sudoku *****************/
-/*
-Creates a new board struct and reads from stdin to correctly format the provided sudoku puzzle.
-
-Takes:
-    nothing
-Returns:
-    board_t* – the sudoku board filled with the given numbers
-*/
-board_t *build_sudoku() {
-board_t *build_sudoku() 
-{
-    board_t* sudoku = board_new();
-    int num;
-    while (scanf("%d", &num) == 1) {
-        for (int i = 0; i < 9; i++) {
-            for (int j = 0; j < 9; j++) {
-                //only need to set if not 0 because automatically 0 and false
-                if (num != 0) {
-                    board_set(sudoku, i, j, num, true);
-                }
-            }
-        }
-    }
-    return sudoku;
-}
 
 /***************** solver *****************/
 /*
@@ -132,35 +27,91 @@ Returns:
     true, if successfully solved
     false, if error
 */
-bool solver(board_t* sudoku)
+static bool solver(board_t* sudoku)
 {
     int row, col;
 
     //goes through sudoku, checks if there are empty spots
     //if empty, parameter keeps the row/column through param
     if (!empty_location(sudoku, &row, &col)) {
+        
         return true;
     }
 
+
     //using the row/column values from empty_location()
     for (int num = 1; num < 10; num++) {
+        // printf("trying %d in row %d col %d\n", num, row, col);
         if (valid_input(sudoku, row, col, num)) {
+
             //tentatively set
+            // sudoku->grid[row][col]->num = num;
             board_set(sudoku, row, col, num, false);
+            // printf("put %d in row %d col %d\n", num, row, col);
+            
+            // board_print(sudoku);
+            // printf("------------------\n");
 
             //continue with solving, if works, return true, success
             if (solver(sudoku)) {
                 return true;
             }
             //doesn't work, go back to 0
+            // sudoku->grid[row][col]->num = 0;
             board_set(sudoku, row, col, 0, false);
+            // printf("COLUMN = %d\n", col);
         }
     }
 
     return false;
 }
+
+/***************** sudoku_solve *****************/
+/*
+sudoku_solve works as the driving function behind the 'solver' and calls on the necessary functions to buid and solve the sudoku puzzle.
+
+Takes:
+    board_t* – a pointer to a non-empty non-solved sudoku puzzle
+Returns:
+    true, if successfully solved
+    false, if error
+*/
+bool sudoku_solve(board_t* sudoku) {
     
-    
+    if (solver(sudoku)) {
+        board_print(sudoku);
+        return true;
+    }
+    else {
+        fprintf(stderr, "sudoku not solvable\n");
+        return false;
+    }
+}
+
+/***************** build_sudoku *****************/
+/*
+build_sudoku reads from stdin and builds a sudoku board.
+
+Takes:
+    nothing
+Returns:
+    A sudoku puzzle ready to be solved.
+*/
+board_t *build_sudoku() 
+{
+    board_t* sudoku = board_new();
+    int num;
+      for (int i = 0; i < 9; i++) {
+          for (int j = 0; j < 9; j++) {
+              //only need to set if not 0 because automatically 0 and false
+              if (scanf("%d", &num) == 1) {
+                  board_set(sudoku, i, j, num, true);
+              }
+          }
+      }
+    return sudoku;
+}
+
 ///////////////////////////////////////////
 /****************** create ****************/
 ///////////////////////////////////////////
@@ -187,11 +138,14 @@ void sudoku_create()
         }
     }
 }
+
+int main () {
+    board_t *sudoku = build_sudoku();
+    sudoku_solve(sudoku);
+}
+
     
-    
-    
-    
-    
+   
     
     
     
