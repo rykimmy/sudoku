@@ -119,6 +119,10 @@ board_t *build_sudoku()
 /*
 General Pseuo Code:
 1. Fill all the diagonal 3x3 matrices.
+- when randomly inputting to the three matrices, we can use a bag to hold 1-9 and 'extract' to randomize
+- we then check if each the number works (valid_input or can create another helper function that just checks for the box)
+- do this for each of the three diagonal matrices, probably within a nested for-loop for each matrix
+
 2. Fill recursively rest of the non-diagonal matrices.
    For every cell to be filled, we try all numbers until
    we find a safe number to be placed.  
