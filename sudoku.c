@@ -10,6 +10,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 #include "board.c"
 
 bool solver(board_t* sudoku);
@@ -158,3 +159,39 @@ bool solver(board_t* sudoku)
 
     return false;
 }
+    
+    
+///////////////////////////////////////////
+/****************** create ****************/
+///////////////////////////////////////////
+
+/*
+General Pseuo Code:
+1. Fill all the diagonal 3x3 matrices.
+2. Fill recursively rest of the non-diagonal matrices.
+   For every cell to be filled, we try all numbers until
+   we find a safe number to be placed.  
+3. Once matrix is fully filled, remove K elements
+   randomly to complete game.
+*/
+void sudoku_create()
+{
+    board_t* board = board_new();
+    
+    srand(time(0));
+    
+    //
+    for (int i = 0; i < 3; i++) {
+        for (int j = 0; j < 3; j++) {
+            
+        }
+    }
+}
+    
+    
+    
+    
+    
+    
+    
+    
