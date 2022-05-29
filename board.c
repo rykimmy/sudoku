@@ -3,7 +3,8 @@
  *
  * see board.h for more information.
  *
- * Group 9, CS50 Spring 2022
+ * CS50 Spring 2022
+ * DataNiners: Ashley Liang, Matthew Kim, Lucy Korte, Ryan Kim
  */
 
 #include <stdio.h>
@@ -150,7 +151,6 @@ bool valid_input(board_t *board, int row, int column, int num) {
   }
   return true;
 }
-
 
 
 bool empty_location(board_t *board, int *row, int *col) {

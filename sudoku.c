@@ -13,7 +13,17 @@
 #include "board.h"
 
 
-bool solver(board_t* sudoku)
+/***************** solver *****************/
+/*
+Solver takes a non-empty non-solved sudoku board and recursively runs through each slot using a backtracking method to solve the puzzle.
+
+Takes:
+    board_t* – a pointer to a non-empty non-solved sudoku puzzle
+Returns:
+    true, if successfully solved
+    false, if error
+*/
+static bool solver(board_t* sudoku)
 {
     int row, col;
 

@@ -9,6 +9,9 @@
  * Output:
  *     'solve' -> outputs the solved sudoku puzzle
  *     'create' -> outputs a new sudoku puzzle
+ * 
+ * Assumptions:
+ *     If calling 'solve', caller will pipe a valid sudoku puzzle instead of manually entering numbers
  *
  * DataNiners: Ashley Liang, Matthew Kim, Lucy Korte, Ryan Kim
  * CS50, 22S
@@ -17,8 +20,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "sudoku.h"
 
-int main(const int argc, char *argv[]) {
+int main(const int argc, char *argv[]) 
+{
     int status = 0;
 
     // Error checking --> number of arguments
@@ -31,12 +36,12 @@ int main(const int argc, char *argv[]) {
     // Solve Mode
     if (strcmp(argv[1], "solve") == 0) {
         printf("Solving sudoku puzzle\n");
-        // Run the function to solve
+        sudoku_solve();
     }
     // Create Mode
     else if (strcmp(argv[1], "create") == 0) {
         printf("Creating new sudoku puzzle\n");
-        // Run the function to create
+        sudoku_create();
     }
     // Error
     else {
