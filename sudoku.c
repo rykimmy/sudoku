@@ -10,8 +10,12 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 #include "board.h"
 
+///////////////////////////////////////////
+/****************** Solve ****************/
+///////////////////////////////////////////
 
 /***************** solver *****************/
 /*
@@ -62,6 +66,16 @@ static bool solver(board_t* sudoku)
     return false;
 }
 
+/***************** sudoku_solve *****************/
+/*
+sudoku_solve works as the driving function behind the 'solver' and calls on the necessary functions to buid and solve the sudoku puzzle.
+
+Takes:
+    board_t* – a pointer to a non-empty non-solved sudoku puzzle
+Returns:
+    true, if successfully solved
+    false, if error
+*/
 bool sudoku_solve(board_t* sudoku) {
     
     if (solver(sudoku)) {
@@ -73,6 +87,16 @@ bool sudoku_solve(board_t* sudoku) {
         return false;
     }
 }
+
+/***************** build_sudoku *****************/
+/*
+build_sudoku reads from stdin and builds a sudoku board.
+
+Takes:
+    nothing
+Returns:
+    A sudoku puzzle ready to be solved.
+*/
 board_t *build_sudoku() 
 {
     board_t* sudoku = board_new();
@@ -88,7 +112,40 @@ board_t *build_sudoku()
     return sudoku;
 }
 
+///////////////////////////////////////////
+/****************** create ****************/
+///////////////////////////////////////////
+
+/*
+General Pseuo Code:
+1. Fill all the diagonal 3x3 matrices.
+2. Fill recursively rest of the non-diagonal matrices.
+   For every cell to be filled, we try all numbers until
+   we find a safe number to be placed.  
+3. Once matrix is fully filled, remove K elements
+   randomly to complete game.
+*/
+void sudoku_create()
+{
+    board_t* board = board_new();
+    
+    srand(time(0));
+    
+    //
+    for (int i = 0; i < 3; i++) {
+        for (int j = 0; j < 3; j++) {
+            
+        }
+    }
+}
+
 int main () {
     board_t *sudoku = build_sudoku();
     sudoku_solve(sudoku);
 }
+
+    
+   
+    
+    
+    
