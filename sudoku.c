@@ -310,10 +310,31 @@ board_t* sudoku_create()
     return board;
 }
 
-int main () {
-    board_t *board = sudoku_create();
-    if (unique_solution(board)) {
-        printf("worked\n");
+int main (const int argc, char *argv[]) {
+    int status = 0;
+
+    // Error checking --> number of arguments
+    if (argc != 2) {
+        fprintf(stderr, "Invalid number of arguments\n");
+        status++;
+        return status;
     }
-    sudoku_solve(board);
+
+    // Solve Mode
+    if (strcmp(argv[1], "solve") == 0) {
+        printf("Solving sudoku puzzle\n");
+        board_t *sudoku = build_sudoku();
+        sudoku_solve(sudoku);
+    }
+    // Create Mode
+    else if (strcmp(argv[1], "create") == 0) {
+        printf("Creating new sudoku puzzle\n");
+        sudoku_create();
+    }
+    // Error
+    else {
+        fprintf(stderr, "Invalid argument 1: must call 'create' or 'solve'\n");
+        status++;
+        return status;
+    }
 }
