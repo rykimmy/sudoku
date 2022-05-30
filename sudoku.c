@@ -10,7 +10,10 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
+#include <time.h>
 #include "board.h"
+#include "libcs50/bag.h"
 
 
 /***************** solver *****************/
@@ -132,6 +135,7 @@ board_t *build_sudoku()
     return sudoku;
 }
 
+
 bool sudoku_solve(board_t* sudoku) {
     
     if (solver(sudoku)) {
@@ -153,6 +157,99 @@ bool sudoku_solve_backward(board_t* sudoku) {
     else {
         fprintf(stderr, "sudoku not solvable\n");
         return false;
+
+///////////////////////////////////////////
+/****************** create ****************/
+///////////////////////////////////////////
+
+/*
+General Pseuo Code:
+1. Fill all the diagonal 3x3 matrices.
+
+2. Fill recursively rest of the non-diagonal matrices.
+   For every cell to be filled, we try all numbers until
+   we find a safe number to be placed.  
+   
+3. Once matrix is fully filled, remove K elements
+   randomly to complete game.
+*/
+bool sudoku_create()
+{   
+    // Setup
+    board_t* board = board_new();
+    int empty_slots = 40;       // can change this later based on the difficulty_level
+    int emptied = 0;
+    
+    // Randomly sets the slots of the diagonal matrices
+    fill_matrix(board, 0, 3);
+    fill_matrix(board, 3, 6);
+    fill_matrix(board, 6, 9);
+    
+    // Fills in the rest of the slots --> have to check whether this will work (do we need to set the bool of each of the matrices slots as true?)
+    if (!sudoku_solve(board)) {
+        fprintf(stderr, "sudoku_create failed: sudoku_solve returned false\n");
+        return false;
+    }
+    
+    // Remove elements randomly to complete the game
+    remove_slots(board, empty_slots, emptied);
+}
+
+void fill_matrix(board_t* board, int min_range, int max_range)
+{
+    // Initializing the bag to hold numbers 1-9
+    bag_t* numbers = bag_new();
+    for (int i = 1; i < 10; i++) {
+        bag_insert(numbers, i);
+    }
+    
+    // Randomly set each slot to one of the numbers in the bag (1-9)
+    for (int i = min_range; i < max_range; i++) {
+        for (int j = min_range; j < max_range; j++) {
+            int slot_num = bag_extract(numbers);
+            board[i][j]->num = slot_num;    // or if we get rid of slot then board[i][j] = slot_num;
+            board[i][j]->given = true;
+        }
+    }
+    
+    // Cleanup
+    bag_delete(numbers);
+}
+
+void remove_slots(board_t* board, int empty_slots, int emptied)
+{
+    srand(time(0));
+    
+    int row = 0;
+    int col = 0;
+    while (emptied < empty_slots) {
+        
+        // Generate random number
+        int rand_num = rand();
+        
+        // If random number matches and the current slot is not already set to 0, set it to 0
+        if (rand_num % 9 == 0 && board[row][col]->num != 0) {
+            board[row][col] = 0;
+            // one of the other based on slot
+            board[row][col]->num = 0;
+            board[row][col]->given = false;
+            
+            // Increment the number of slots we have emptied
+            emptied++;
+        }
+        
+        // Update row, col
+        if (row < 8) {
+            row++;
+        }
+        else if (col < 8) {
+            row = 0;
+            col++;
+        }
+        else {
+            row = 0;
+            col = 0;
+        }
     }
 }
 
