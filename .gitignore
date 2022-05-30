@@ -2,3 +2,4 @@ board
 *.o
 sudoku
 sudoku_driver
+sudoku
