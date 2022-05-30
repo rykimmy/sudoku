@@ -75,10 +75,7 @@ board_t *board_new()
     }
   }
   
-  // test, inputs 2 and 5 into board
-  // board->grid[0][0]->num = 2;
-  // board->grid[1][1]->num = 5;
-
+  
   return board;
 }
 
@@ -212,8 +209,13 @@ void board_iterate(board_t *board, void *arg, void (*itemfunc)(void *arg, void *
   }
 }
 
-
-
-
-
-
+board_t *board_copy(board_t *original) 
+{
+  board_t *copy = board_new();
+  for (int i=0; i < 9; i++){
+    for (int j=0; j < 9; j++){
+      copy->grid[i][j]->num = original->grid[i][j]->num;
+    }
+  }
+  return copy;
+}
