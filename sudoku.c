@@ -13,7 +13,6 @@
 #include <stdbool.h>
 #include <time.h>
 #include "board.h"
-#include "libcs50/bag.h"
 
 
 /***************** solver *****************/
@@ -42,14 +41,14 @@ static bool solver(board_t* sudoku)
         if (valid_input(sudoku, row, col, num)) {
 
             //tentatively set
-            board_set(sudoku, row, col, num, false);
+            board_set(sudoku, row, col, num);
 
             //continue with solving, if works, return true, success
             if (solver(sudoku)) {
                 return true;
             }
             //doesn't work, go back to 0
-            board_set(sudoku, row, col, 0, false);
+            board_set(sudoku, row, col, 0);
         }
     }
 
@@ -84,14 +83,14 @@ static bool solver_backward(board_t* sudoku)
         if (valid_input(sudoku, row, col, num)) {
 
             //tentatively set
-            board_set(sudoku, row, col, num, false);
+            board_set(sudoku, row, col, num);
         
             //continue with solving, if works, return true, success
             if (solver(sudoku)) {
                 return true;
             }
             //doesn't work, go back to 0
-            board_set(sudoku, row, col, 0, false);
+            board_set(sudoku, row, col, 0);
         
         }
     }
@@ -132,7 +131,7 @@ board_t *build_sudoku()
           for (int j = 0; j < 9; j++) {
               //only need to set if not 0 because automatically 0 and false
               if (scanf("%d", &num) == 1) {
-                  board_set(sudoku, i, j, num, true);
+                  board_set(sudoku, i, j, num);
               }
           }
       }
@@ -181,7 +180,7 @@ int *random_list() {
     for (int i = 1; i < 10; i++) {
         list[i - 1] = i;
     }
-    srand(time(0));
+    srand(time(NULL) + rand());
     for (int j = 0; j < 9; j++) {
         int swap = rand() % (9 - j);
         int temp = list[swap];
@@ -207,10 +206,10 @@ void remove_slots(board_t* board, int empty_slots, int emptied)
         // If random number matches and the current slot is not already set to 0, set it to 0
         if (rand_num % 9 == 0 && board_get(board, row, col) != 0) {
             int copy = board_get(board, row, col);
-            board_set(board, row, col, 0, false);
+            board_set(board, row, col, 0);
             // one of the other based on slot
             if (!unique_solution(board)) {
-                board_set(board, row, col, copy, false);
+                board_set(board, row, col, copy);
                 continue;
             }
             
@@ -256,22 +255,25 @@ static bool solver_random(board_t* sudoku, int *list)
 
 
     //using the row/column values from empty_location()
+    free(list);
+    list = random_list();
     for (int i = 0; i < 9; i++) {
-        // printf("trying %d in row %d col %d\n", num, row, col);
+        
         if (valid_input(sudoku, row, col, list[i])) {
-
             //tentatively set
-            board_set(sudoku, row, col, list[i], false);
+            board_set(sudoku, row, col, list[i]);
+    
 
             //continue with solving, if works, return true, success
             if (solver_random(sudoku, list)) {
                 return true;
             }
             //doesn't work, go back to 0
-            board_set(sudoku, row, col, 0, false);
+            board_set(sudoku, row, col, 0);
         
         }
     }
+
     return false;
 }
 
@@ -288,13 +290,13 @@ bool sudoku_solve_random(board_t* sudoku) {
 }
 
 
+
 board_t* sudoku_create()
 {   
     // Setup
     board_t* board = board_new();
-    int empty_slots = 40;       // can change this later based on the difficulty_level
+    int empty_slots = 50;       // can change this later based on the difficulty_level
     int emptied = 0;
-    
     
     // Fills in the rest of the slots --> have to check whether this will work (do we need to set the bool of each of the matrices slots as true?)
     if (!sudoku_solve_random(board)) {
@@ -309,6 +311,9 @@ board_t* sudoku_create()
 }
 
 int main () {
-    board_t *sudoku = sudoku_create();
-    sudoku_solve(sudoku);
+    board_t *board = sudoku_create();
+    if (unique_solution(board)) {
+        printf("worked\n");
+    }
+    sudoku_solve(board);
 }
