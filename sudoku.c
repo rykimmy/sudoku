@@ -312,7 +312,59 @@ board_t* sudoku_create()
 
 int main (const int argc, char *argv[]) {
     int status = 0;
+    int difficulty_level;
+    
+    // Parsing Arguments:
+    
+    // 'solve' mode
+    if (strcmp(argv[1], "solve") == 0)
+    {
+    }
+    // 'create' mode
+    else if (strcmp(argv[1], "create") == 0)
+    {
+        // If a third argument is provided, check which difficulty
+        if (argc == 3)
+        {
+            if (strcmp(argv[2], "easy") == 0)
+            {
+                difficulty_level = 40;      // 40 empty slots
+            }
+            else if (strcmp(argv[2], "medium") == 0)
+            {
+                difficulty_level = 45;      // 45 empty slots
+            }
+            else if (strcmp(argv[2], "hard") == 0)
+            {
+                difficulty_level = 50;      // 50 empty slots
+            }
+            else
+            {
+                fprintf(stderr, "invalid command-line arguments\nusage: ./sudoku ['create', 'solve'] ['easy', 'medium', 'hard']");
+                status++;
+                return status;
+            }
+        }
+        // If difficulty_level is not set by caller, naturally set to 'easy'
+        else if (argc == 2)
+        {
+            difficulty_level = 40;
+        }
+        else
+        {
+            fprintf(stderr, "invalid command-line arguments\nusage: ./sudoku ['create', 'solve'] ['easy', 'medium', 'hard']");
+            status++;
+            return status;
+        }
+    }
+    else
+    {
+        fprintf(stderr, "invalid command-line arguments\usage: ./sudoku ['create', 'solve'] ['easy', 'medium', 'hard']");
+        status++;
+        return status;
+    }
 
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Error checking --> number of arguments
     if (argc != 2) {
         fprintf(stderr, "Invalid number of arguments\n");
