@@ -112,13 +112,18 @@ bool unique_solution(board_t *sudoku) {
     board_t *copy_backward = board_copy(sudoku);
     solver(copy_forward);
     solver_backward(copy_backward);
+    // check if the puzzles are the same when solved with different solvers
     for (int i=0; i < 9; i++){
         for (int j=0; j < 9; j++){
             if (board_get(copy_forward, i, j) != board_get(copy_backward, i, j)) {
+                board_delete(copy_forward);
+                board_delete(copy_backward);
                 return false;
             }
         }
     }
+    board_delete(copy_forward);
+    board_delete(copy_backward);
     return true;
 }
 
@@ -142,10 +147,12 @@ board_t *build_sudoku()
 bool sudoku_solve(board_t* sudoku) {
     if (solver(sudoku)) {
         board_print(sudoku);
+        board_delete(sudoku);
         return true;
     }
     else {
         fprintf(stderr, "sudoku not solvable\n");
+        board_delete(sudoku);
         return false;
     }
 }
@@ -243,7 +250,7 @@ Returns:
     true, if successfully solved
     false, if error
 */
-static bool solver_random(board_t* sudoku, int *list)
+static bool solver_random(board_t* sudoku)
 {
     int row, col;
 
@@ -255,32 +262,31 @@ static bool solver_random(board_t* sudoku, int *list)
 
 
     //using the row/column values from empty_location()
-    free(list);
-    list = random_list();
+    
+    // list = random_list();
     for (int i = 0; i < 9; i++) {
-        
+        int *list = random_list();
         if (valid_input(sudoku, row, col, list[i])) {
             //tentatively set
             board_set(sudoku, row, col, list[i]);
-    
+           
 
             //continue with solving, if works, return true, success
-            if (solver_random(sudoku, list)) {
+            if (solver_random(sudoku)) {
+                free(list);
                 return true;
             }
             //doesn't work, go back to 0
             board_set(sudoku, row, col, 0);
-        
         }
+        free(list);
     }
-
     return false;
 }
 
 bool sudoku_solve_random(board_t* sudoku) {
-    int *list = random_list();
-    if (solver_random(sudoku, list)) {
-      
+    // int *list = random_list();
+    if (solver_random(sudoku)) {
         return true;
     }
     else {
@@ -307,6 +313,7 @@ board_t* sudoku_create()
     // Remove elements randomly to complete the game
     remove_slots(board, empty_slots, emptied);
     board_print(board);
+    board_delete(board);
     return board;
 }
 
