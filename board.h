@@ -42,7 +42,7 @@ board_t *board_new();
  * We do:
  *   set the slot to the given number and boolean
  */
-void board_set(board_t *board, int row, int column, int num, bool given);
+void board_set(board_t *board, int row, int column, int num);
 
 int board_get(board_t *board, int row, int column);
 
@@ -58,7 +58,5 @@ void board_print(board_t *board);
 /***************** board_delete *****************/
 void board_delete(board_t *board);
 
-/***************** board_iterate *****************/
-void board_iterate(board_t *board, void *arg, void (*itemfunc)(void *arg, void *slot));
 
 board_t *board_copy(board_t *original);
