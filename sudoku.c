@@ -33,38 +33,42 @@ static bool solver(board_t* sudoku)
     //goes through sudoku, checks if there are empty spots
     //if empty, parameter keeps the row/column through param
     if (!empty_location(sudoku, &row, &col)) {
-        
         return true;
     }
 
 
     //using the row/column values from empty_location()
     for (int num = 1; num < 10; num++) {
-        // printf("trying %d in row %d col %d\n", num, row, col);
         if (valid_input(sudoku, row, col, num)) {
 
             //tentatively set
-            // sudoku->grid[row][col]->num = num;
             board_set(sudoku, row, col, num, false);
-            // printf("put %d in row %d col %d\n", num, row, col);
-            
-            // board_print(sudoku);
-            // printf("------------------\n");
 
             //continue with solving, if works, return true, success
             if (solver(sudoku)) {
                 return true;
             }
             //doesn't work, go back to 0
-            // sudoku->grid[row][col]->num = 0;
             board_set(sudoku, row, col, 0, false);
-            // printf("COLUMN = %d\n", col);
         }
     }
 
     return false;
 }
+\
 
+/***************** solver_backward *****************/
+/*
+Solver_backward takes a non-empty non-solved sudoku board and recursively runs through each slot using a backtracking method to solve the puzzle.
+Solves puzzle by trying numbers looping from 9 down to 1
+Used to test if a puzzle has multiple solutions
+
+Takes:
+    board_t* – a pointer to a non-empty non-solved sudoku puzzle
+Returns:
+    true, if successfully solved
+    false, if error
+*/
 static bool solver_backward(board_t* sudoku)
 {
     int row, col;
@@ -72,25 +76,16 @@ static bool solver_backward(board_t* sudoku)
     //goes through sudoku, checks if there are empty spots
     //if empty, parameter keeps the row/column through param
     if (!empty_location(sudoku, &row, &col)) {
-        
         return true;
     }
 
-
     //using the row/column values from empty_location()
     for (int num = 9; num > 0; num--) {
-        // printf("trying %d in row %d col %d\n", num, row, col);
         if (valid_input(sudoku, row, col, num)) {
 
             //tentatively set
-            // sudoku->grid[row][col]->num = num;
-            // printf("putting %d at row %d col %d\n", num, row, col);
             board_set(sudoku, row, col, num, false);
-            // printf("put %d in row %d col %d\n", num, row, col);
-            
-            // board_print(sudoku);
-            // printf("------------------\n");
-
+        
             //continue with solving, if works, return true, success
             if (solver(sudoku)) {
                 return true;
@@ -103,7 +98,16 @@ static bool solver_backward(board_t* sudoku)
     return false;
 }
 
+/***************** unique_solution *****************/
+/*
+Unique_solution tests if a puzzle has more than one solution
 
+Takes:
+    board_t* – a pointer to a sudoku puzzle
+Returns:
+    true, if the puzzle has one solution
+    false, if the puzzle has multiple solutions
+*/
 bool unique_solution(board_t *sudoku) {
     board_t *copy_forward = board_copy(sudoku);
     board_t *copy_backward = board_copy(sudoku);
@@ -137,7 +141,6 @@ board_t *build_sudoku()
 
 
 bool sudoku_solve(board_t* sudoku) {
-    
     if (solver(sudoku)) {
         board_print(sudoku);
         return true;
@@ -157,64 +160,38 @@ bool sudoku_solve_backward(board_t* sudoku) {
     else {
         fprintf(stderr, "sudoku not solvable\n");
         return false;
+    }
+}
 
 ///////////////////////////////////////////
 /****************** create ****************/
 ///////////////////////////////////////////
 
+/***************** random_list *****************/
 /*
-General Pseuo Code:
-1. Fill all the diagonal 3x3 matrices.
+Random_list makes a randomized list of numbers 1 - 9
 
-2. Fill recursively rest of the non-diagonal matrices.
-   For every cell to be filled, we try all numbers until
-   we find a safe number to be placed.  
-   
-3. Once matrix is fully filled, remove K elements
-   randomly to complete game.
+Takes:
+    No parameters
+Returns:
+    A randomized list of numbers 1 - 9
 */
-bool sudoku_create()
-{   
-    // Setup
-    board_t* board = board_new();
-    int empty_slots = 40;       // can change this later based on the difficulty_level
-    int emptied = 0;
-    
-    // Randomly sets the slots of the diagonal matrices
-    fill_matrix(board, 0, 3);
-    fill_matrix(board, 3, 6);
-    fill_matrix(board, 6, 9);
-    
-    // Fills in the rest of the slots --> have to check whether this will work (do we need to set the bool of each of the matrices slots as true?)
-    if (!sudoku_solve(board)) {
-        fprintf(stderr, "sudoku_create failed: sudoku_solve returned false\n");
-        return false;
+int *random_list() {
+    int *list = calloc(sizeof(int), 9);
+    for (int i = 1; i < 10; i++) {
+        list[i - 1] = i;
     }
-    
-    // Remove elements randomly to complete the game
-    remove_slots(board, empty_slots, emptied);
+    srand(time(0));
+    for (int j = 0; j < 9; j++) {
+        int swap = rand() % (9 - j);
+        int temp = list[swap];
+        list[swap] = list[8 - j];
+        list[8 - j] = temp;
+    }
+    return list;
 }
 
-void fill_matrix(board_t* board, int min_range, int max_range)
-{
-    // Initializing the bag to hold numbers 1-9
-    bag_t* numbers = bag_new();
-    for (int i = 1; i < 10; i++) {
-        bag_insert(numbers, i);
-    }
-    
-    // Randomly set each slot to one of the numbers in the bag (1-9)
-    for (int i = min_range; i < max_range; i++) {
-        for (int j = min_range; j < max_range; j++) {
-            int slot_num = bag_extract(numbers);
-            board[i][j]->num = slot_num;    // or if we get rid of slot then board[i][j] = slot_num;
-            board[i][j]->given = true;
-        }
-    }
-    
-    // Cleanup
-    bag_delete(numbers);
-}
+
 
 void remove_slots(board_t* board, int empty_slots, int emptied)
 {
@@ -228,11 +205,14 @@ void remove_slots(board_t* board, int empty_slots, int emptied)
         int rand_num = rand();
         
         // If random number matches and the current slot is not already set to 0, set it to 0
-        if (rand_num % 9 == 0 && board[row][col]->num != 0) {
-            board[row][col] = 0;
+        if (rand_num % 9 == 0 && board_get(board, row, col) != 0) {
+            int copy = board_get(board, row, col);
+            board_set(board, row, col, 0, false);
             // one of the other based on slot
-            board[row][col]->num = 0;
-            board[row][col]->given = false;
+            if (!unique_solution(board)) {
+                board_set(board, row, col, copy, false);
+                continue;
+            }
             
             // Increment the number of slots we have emptied
             emptied++;
@@ -253,13 +233,82 @@ void remove_slots(board_t* board, int empty_slots, int emptied)
     }
 }
 
-int main () {
-    board_t *sudoku = build_sudoku();
-   
-    if (unique_solution(sudoku)) {
-        printf("unique solution\n");
+/***************** solver_random *****************/
+/*
+Solver_random takes a non-empty non-solved sudoku board and recursively runs through each slot using a backtracking method to solve the puzzle.
+Solver_random tries numbers based on a randomized list, to generate puzzles that differ every time
+
+Takes:
+    board_t* – a pointer to a non-empty non-solved sudoku puzzle
+Returns:
+    true, if successfully solved
+    false, if error
+*/
+static bool solver_random(board_t* sudoku, int *list)
+{
+    int row, col;
+
+    //goes through sudoku, checks if there are empty spots
+    //if empty, parameter keeps the row/column through param
+    if (!empty_location(sudoku, &row, &col)) {
+        return true;
+    }
+
+
+    //using the row/column values from empty_location()
+    for (int i = 0; i < 9; i++) {
+        // printf("trying %d in row %d col %d\n", num, row, col);
+        if (valid_input(sudoku, row, col, list[i])) {
+
+            //tentatively set
+            board_set(sudoku, row, col, list[i], false);
+
+            //continue with solving, if works, return true, success
+            if (solver_random(sudoku, list)) {
+                return true;
+            }
+            //doesn't work, go back to 0
+            board_set(sudoku, row, col, 0, false);
+        
+        }
+    }
+    return false;
+}
+
+bool sudoku_solve_random(board_t* sudoku) {
+    int *list = random_list();
+    if (solver_random(sudoku, list)) {
+      
+        return true;
     }
     else {
-        printf("multiple solutions\n");
+        fprintf(stderr, "sudoku not solvable\n");
+        return false;
     }
+}
+
+
+board_t* sudoku_create()
+{   
+    // Setup
+    board_t* board = board_new();
+    int empty_slots = 40;       // can change this later based on the difficulty_level
+    int emptied = 0;
+    
+    
+    // Fills in the rest of the slots --> have to check whether this will work (do we need to set the bool of each of the matrices slots as true?)
+    if (!sudoku_solve_random(board)) {
+        fprintf(stderr, "sudoku_create failed: sudoku_solve returned false\n");
+        return false;
+    }
+    
+    // Remove elements randomly to complete the game
+    remove_slots(board, empty_slots, emptied);
+    board_print(board);
+    return board;
+}
+
+int main () {
+    board_t *sudoku = sudoku_create();
+    sudoku_solve(sudoku);
 }
