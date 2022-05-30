@@ -6,7 +6,7 @@
 #edit for the right programs
 PROG = board sudoku sudoku_driver
 OBJS = board.o sudoku.o sudoku_driver.o
-LIBS = libcs50/libcs50.a
+LIBS = libcs50/libcs50-given.a
 
 # uncomment the following to turn on verbose memory logging
 #TESTING=-DMEMTEST

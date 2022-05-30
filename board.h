@@ -60,3 +60,5 @@ void board_delete(board_t *board);
 
 /***************** board_iterate *****************/
 void board_iterate(board_t *board, void *arg, void (*itemfunc)(void *arg, void *slot));
+
+board_t *board_copy(board_t *original);
