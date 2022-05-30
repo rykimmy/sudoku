@@ -291,11 +291,11 @@ bool sudoku_solve_random(board_t* sudoku) {
 
 
 
-board_t* sudoku_create()
+board_t* sudoku_create(int difficulty_level)
 {   
     // Setup
     board_t* board = board_new();
-    int empty_slots = 50;       // can change this later based on the difficulty_level
+    int empty_slots = difficulty_level;       // can change this later based on the difficulty_level
     int emptied = 0;
     
     // Fills in the rest of the slots --> have to check whether this will work (do we need to set the bool of each of the matrices slots as true?)
@@ -319,6 +319,9 @@ int main (const int argc, char *argv[]) {
     // 'solve' mode
     if (strcmp(argv[1], "solve") == 0)
     {
+        printf("Solving sudoku puzzle\n");
+        board_t *sudoku = build_sudoku();
+        sudoku_solve(sudoku);
     }
     // 'create' mode
     else if (strcmp(argv[1], "create") == 0)
@@ -329,14 +332,20 @@ int main (const int argc, char *argv[]) {
             if (strcmp(argv[2], "easy") == 0)
             {
                 difficulty_level = 40;      // 40 empty slots
+                printf("Creating new sudoku puzzle\n");
+                sudoku_create(difficulty_level);
             }
             else if (strcmp(argv[2], "medium") == 0)
             {
                 difficulty_level = 45;      // 45 empty slots
+                printf("Creating new sudoku puzzle\n");
+                sudoku_create(difficulty_level);
             }
             else if (strcmp(argv[2], "hard") == 0)
             {
                 difficulty_level = 50;      // 50 empty slots
+                printf("Creating new sudoku puzzle\n");
+                sudoku_create(difficulty_level);
             }
             else
             {
@@ -349,6 +358,8 @@ int main (const int argc, char *argv[]) {
         else if (argc == 2)
         {
             difficulty_level = 40;
+            printf("Creating new sudoku puzzle\n");
+            sudoku_create(difficulty_level);
         }
         else
         {
@@ -363,30 +374,6 @@ int main (const int argc, char *argv[]) {
         status++;
         return status;
     }
-
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // Error checking --> number of arguments
-    if (argc != 2) {
-        fprintf(stderr, "Invalid number of arguments\n");
-        status++;
-        return status;
-    }
-
-    // Solve Mode
-    if (strcmp(argv[1], "solve") == 0) {
-        printf("Solving sudoku puzzle\n");
-        board_t *sudoku = build_sudoku();
-        sudoku_solve(sudoku);
-    }
-    // Create Mode
-    else if (strcmp(argv[1], "create") == 0) {
-        printf("Creating new sudoku puzzle\n");
-        sudoku_create();
-    }
-    // Error
-    else {
-        fprintf(stderr, "Invalid argument 1: must call 'create' or 'solve'\n");
-        status++;
-        return status;
-    }
+    
+    return status;
 }
