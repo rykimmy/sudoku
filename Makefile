@@ -27,6 +27,12 @@ sudoku: sudoku.o board.o $(LIBS)
 test: sudoku
 	bash -v testing.sh &> testing.out
 
+valgrind: sudoku
+	bash -v valgrind.sh &> valgrind.out
+
+# fuzz: fuzz.o $(LIBS)
+# 	$(CC) $(CFLAGS) $^ -o $@ 
+
 .PHONY: all test valgrind clean
 
 clean:

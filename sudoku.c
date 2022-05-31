@@ -324,11 +324,11 @@ int main (const int argc, char *argv[]) {
     // Parsing Arguments:
 
     // test number of arugments
-    if (argc > 4 || argc < 1){
-        fprintf(stderr, "invalid command-line arguments or usage: ./sudoku ['create', 'solve'] ['easy', 'medium', 'hard'] \n");
+    if (argc > 3 || argc < 1){
+        fprintf(stderr, "too many arguments: ./sudoku ['create', 'solve'] ['easy', 'medium', 'hard'] \n");
         return status;
     }
-    
+
     // 'solve' mode
     if (strcmp(argv[1], "solve") == 0)
     {
