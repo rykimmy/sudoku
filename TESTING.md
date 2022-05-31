@@ -66,4 +66,3 @@ usage: ./testing.sh ['solve','create'] ['difficulty'] \n
 ```
 # fuzztest testing
 * uses bash to do a fuzz test. essentially, creates a new random sudoku puzzle and then pipes it into solver.
-d00
