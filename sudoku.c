@@ -162,6 +162,9 @@ bool sudoku_solve(board_t* sudoku) {
 */
 int *random_list() {
     int *list = calloc(sizeof(int), 9);
+    if (list == NULL) {
+        fprintf(stderr, "Error allocating memory\n");
+    }
     for (int i = 1; i < 10; i++) {
         list[i - 1] = i;
     }
@@ -284,14 +287,17 @@ board_t* sudoku_create(int difficulty_level)
     return board;
 }
 
+
+/***********************************************/
 int main (const int argc, char *argv[]) {
     int status = 0;
     int difficulty_level;
     
     // Parsing Arguments:
 
+
     // test number of arugments
-    if (argc > 4 || argc < 1){
+    if (argc > 4 || argc < 2){
         fprintf(stderr, "invalid command-line arguments or usage: ./sudoku ['create', 'solve'] ['easy', 'medium', 'hard'] \n");
         return status;
     }
@@ -316,13 +322,13 @@ int main (const int argc, char *argv[]) {
             }
             else if (strcmp(argv[2], "medium") == 0)
             {
-                difficulty_level = 50;      // 45 empty slots
+                difficulty_level = 50;      // 50 empty slots
                 printf("Creating new sudoku puzzle\n");
                 sudoku_create(difficulty_level);
             }
             else if (strcmp(argv[2], "hard") == 0)
             {
-                difficulty_level = 60;      // 50 empty slots
+                difficulty_level = 55;      // 55 empty slots
                 printf("Creating new sudoku puzzle\n");
                 sudoku_create(difficulty_level);
             }
