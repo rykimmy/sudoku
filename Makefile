@@ -25,7 +25,7 @@ sudoku: sudoku.o board.o $(LIBS)
 	$(CC) $(CFLAGS) $^ -o $@ 
 
 test: sudoku
-	bash -v testing.sh &> testing.out
+	./testing.sh &> testing.out
 
 .PHONY: all test valgrind clean
 

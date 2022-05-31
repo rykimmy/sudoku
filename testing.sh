@@ -23,11 +23,12 @@ solveBoard() {
 # output: board with one solution that is solvable
 createBoard() {
      # check number of arguments
-     if [ $# -ge 5 ] || [ $# -le 2 ]; then
-          echo >&2 "usage: ./testing.sh ['solve','create'] ['difficulty'] \n"
-          ((ret+=1))
-          exit $ret
-     fi
+     # if [ $# -ge 5 ] || [ $# -le 1 ]; then
+     #      echo >&2 "usage: ./testing.sh ['solve','create'] ['difficulty'] \n"
+     #      ((ret+=1))
+     #      exit $ret
+     # fi
+     ./sudoku create $1
      # if [ $# -lt 0 ]; then
      #      echo >&2 "usage: ./testing.sh ['solve','create'] ['difficulty'] \n"
      #      ((ret+=1))
