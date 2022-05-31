@@ -35,11 +35,19 @@ board_t *board_new()
 {
   // Initializing the board and set of slots
   board_t *board = malloc(sizeof(board_t));
+  if (board == NULL) {
+    fprintf(stderr, "Error allocating memory\n");
+  }
   int **row = calloc(9, sizeof(int *));
-  
+  if (row == NULL) {
+    fprintf(stderr, "Error allocating memory\n");
+  }
   // Setting up the grid
   for (int i = 0; i < 9; i++) {
     int *column = calloc(9, sizeof(int));
+    if (column == NULL) {
+      fprintf(stderr, "Error allocating memory\n");
+    }
     row[i] = column;
   }
   
@@ -50,7 +58,6 @@ board_t *board_new()
       board->grid[i][j] = 0;
     }
   }
-  
   return board;
 }
 
@@ -61,7 +68,6 @@ board_t *board_new()
 void board_set(board_t *board, int row, int column, int num) 
 {
   if (board != NULL) { // validate that the board_set works
-    //validate that the row and column are within boundaries
       board->grid[row][column] = num;
   }
 }
@@ -130,12 +136,13 @@ bool empty_location(board_t *board, int *row, int *col) {
   // Iterating through every slot
   for (*row = 0; *row < 9; (*row)++) {
     for (*col = 0; *col < 9; (*col)++) {
+      // return true if empty slot found
       if (board->grid[*row][*col] == 0) {
         return true;
-      }
-      
+      }    
     }
   }
+  // no empty slots
   return false;
 }
 
@@ -146,12 +153,14 @@ bool empty_location(board_t *board, int *row, int *col) {
 void board_print(board_t *board)
 {
   // Iterating through every slot and printing each
-  for (int i=0; i < 9; i++){
-    for (int j=0; j < 9; j++){
-        int num = board->grid[i][j]; 
-        printf("%d ", num);
-    }
-    printf("\n");
+  if (board != NULL) {
+      for (int i=0; i < 9; i++){
+        for (int j=0; j < 9; j++){
+            int num = board->grid[i][j]; 
+            printf("%d ", num);
+        }
+        printf("\n");
+      }
   }
 }
 
@@ -161,11 +170,13 @@ void board_print(board_t *board)
 **/
 void board_delete(board_t *board)
 {
-  for (int i = 0; i < 9; i++) {
-    free(board->grid[i]);
+  if (board != NULL) {
+    for (int i = 0; i < 9; i++) {
+      free(board->grid[i]);
+    }
+    free(board->grid);
+    free(board);
   }
-  free(board->grid);
-  free(board);
 }
 
 /***************** board_copy *****************/
