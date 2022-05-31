@@ -30,6 +30,14 @@ The user-inputted `sudoku` only contains numbers and whitespaces. The total numb
 * `fuzztest.sh` - testing sudoku
 * `testing.sh` - test driver
 * `TESTING.md` - testing results
+* `extracredit.py` - extra credit graphics in python
+* `cs1lib.py` - library for extra credit graphics
+
+### Extra Credit 
+
+We implemented easy, medium, and hard modes for creating a puzzle.
+
+Additionally, we created a graphical interface for the Sudoku board in Python. The python code creates a puzzle using the same algorithm we implemented in C, then displays it. Then, the user can click on a square and input a number from stdin that will be displayed on the screen. If the user presses the space bar, then clicking on squares displays the correct answer in a square.
 
 ### Compilation
 
@@ -37,22 +45,7 @@ To compile, simply `make`.
 
 ### Testing
 
-The `testing.sh` program includes hard-coded test cases. These are the following test cases:
-1. Test the program with various forms of incorrect command-line arguments to ensure that its command-line parsing, and validation of those parameters, works correctly.
 
-2. Test the crawler with a seedURL that points to a non-existent server.
-
-3. Test the crawler with a seedURL that points to a non-internal server.
-
-4. Test the crawler with a seedURL that points to a valid server but non-existent page.
-
-5. Crawl a simple, closed set of cross-linked web pages (letters playground). Ensure that some page(s) are mentioned multiple times within a page, and multiple times across the set of pages. Ensure there is a loop (a cycle in the graph of pages). In such a little site, you know exactly what set of pages should be crawled, at what depths, and you know where your program might trip up.
-
-6. Point the crawler at a page in that site (letters playground), and explore at depths 0, 1, 2, 3, 4, 5. Verify that the files created match expectations.
-
-7. Repeat with a different seed page in that same site. If the site is indeed a graph, with cycles, there should be several interesting starting points.
-
-8. Point the crawler at our Wikipedia playground. Explore at depths 0, 1, 2. (It takes a long time to run at depth 2 or higher!) Verify that the files created match expectations.
 
 To test, redirecting the output to testing.out, simply `make test &> testing.out`.
 

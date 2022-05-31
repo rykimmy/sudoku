@@ -16,6 +16,89 @@
 #include <time.h>
 #include "board.h"
 
+/**** function declarations ****/
+static bool solver(board_t* sudoku);
+static bool solver_backward(board_t* sudoku);
+static bool unique_solution(board_t *sudoku); 
+static board_t *build_sudoku();
+static bool sudoku_solve(); 
+static int *random_list();
+static void remove_slots(board_t* board, int empty_slots, int emptied);
+static bool solver_random(board_t* sudoku);
+static void sudoku_create(int difficulty_level);
+
+/************** main **************/
+int main (const int argc, char *argv[]) {
+    int status = 0;
+    int difficulty_level;
+    
+    // Parsing Arguments
+    // test number of arguments
+    if (argc > 4 || argc < 2){
+        fprintf(stderr, "invalid command-line arguments or usage: ./sudoku ['create', 'solve'] ['easy', 'medium', 'hard'] \n");
+        return status;
+    }
+    // 'solve' mode
+    if (strcmp(argv[1], "solve") == 0)
+    {
+        printf("Solving sudoku puzzle\n");
+        sudoku_solve();
+    }
+    // 'create' mode
+    else if (strcmp(argv[1], "create") == 0)
+    {
+        int easy = 40;
+        int medium = 50;
+        int hard = 55;
+        // If a third argument is provided, check which difficulty
+        if (argc == 3)
+        {
+            if (strcmp(argv[2], "easy") == 0)
+            {
+                difficulty_level = easy;      // 40 empty slots
+                printf("Creating new easy sudoku puzzle\n");
+            }
+            else if (strcmp(argv[2], "medium") == 0)
+            {
+                difficulty_level = medium;      // 50 empty slots
+                printf("Creating new medium sudoku puzzle\n");
+            }
+            else if (strcmp(argv[2], "hard") == 0)
+            {
+                difficulty_level = hard;      // 55 empty slots
+                printf("Creating new hard sudoku puzzle\n");
+            }
+            else
+            {
+                fprintf(stderr, "invalid command-line arguments or usage: ./sudoku ['create', 'solve'] ['easy', 'medium', 'hard'] \n");
+                status++;
+                return status;
+            }
+            sudoku_create(difficulty_level);
+        }
+        // If difficulty_level is not set by caller, naturally set to 'easy'
+        else if (argc == 2)
+        {
+            difficulty_level = easy;
+            printf("Creating new sudoku puzzle\n");
+            sudoku_create(difficulty_level);
+        }
+        else
+        {
+            fprintf(stderr, "invalid command-line arguments or usage: ./sudoku ['create', 'solve'] ['easy', 'medium', 'hard'] \n");
+            status++;
+            return status;
+        }
+    }
+    else
+    {
+        fprintf(stderr, "invalid command-line arguments or usage: ./sudoku ['create', 'solve'] ['easy', 'medium', 'hard']");
+        status++;
+        return status;
+    }
+    
+    return status;
+}
 
 /***************** solver *****************/
 /*
@@ -92,7 +175,8 @@ static bool solver_backward(board_t* sudoku)
 /*
 * See sudoku.h for more information
 */
-bool unique_solution(board_t *sudoku) {
+static bool unique_solution(board_t *sudoku) 
+{
     // make copies of the sudoku board to check for multiple solutions
     board_t *copy_forward = board_copy(sudoku);
     board_t *copy_backward = board_copy(sudoku);
@@ -118,7 +202,7 @@ bool unique_solution(board_t *sudoku) {
 /*
 * See sudoku.h for more information
 */
-board_t *build_sudoku() 
+static board_t *build_sudoku() 
 {
     board_t* sudoku = board_new();
     int num;
@@ -137,7 +221,9 @@ board_t *build_sudoku()
 /*
 * See sudoku.h for more information
 */
-bool sudoku_solve(board_t* sudoku) {
+static bool sudoku_solve() 
+{
+    board_t* sudoku = build_sudoku();
     // print the solved board if the board is solvable
     if (solver(sudoku)) {
         board_print(sudoku);
@@ -160,7 +246,9 @@ bool sudoku_solve(board_t* sudoku) {
 /*
 * See sudoku.h for more information
 */
-int *random_list() {
+static int *random_list() 
+{
+    //list of 9 numbers 1-9, just shuffled
     int *list = calloc(sizeof(int), 9);
     if (list == NULL) {
         fprintf(stderr, "Error allocating memory\n");
@@ -183,7 +271,7 @@ int *random_list() {
 /*
 * See sudoku.h for more information
 */
-void remove_slots(board_t* board, int empty_slots, int emptied)
+static void remove_slots(board_t* board, int empty_slots, int emptied)
 {
     srand(time(0));
     
@@ -267,7 +355,7 @@ static bool solver_random(board_t* sudoku)
 /*
 * See sudoku.h for more information
 */
-board_t* sudoku_create(int difficulty_level)
+static void sudoku_create(int difficulty_level)
 {   
     // Create empty board
     board_t* board = board_new();
@@ -284,84 +372,4 @@ board_t* sudoku_create(int difficulty_level)
     remove_slots(board, empty_slots, emptied);
     board_print(board);
     board_delete(board);
-    return board;
-}
-
-
-/***********************************************/
-int main (const int argc, char *argv[]) {
-    int status = 0;
-    int difficulty_level;
-    
-    // Parsing Arguments:
-
-
-    // test number of arugments
-    if (argc > 4 || argc < 2){
-        fprintf(stderr, "invalid command-line arguments or usage: ./sudoku ['create', 'solve'] ['easy', 'medium', 'hard'] \n");
-        return status;
-    }
-    // 'solve' mode
-    if (strcmp(argv[1], "solve") == 0)
-    {
-        printf("Solving sudoku puzzle\n");
-        board_t *sudoku = build_sudoku();
-        sudoku_solve(sudoku);
-    }
-    // 'create' mode
-    else if (strcmp(argv[1], "create") == 0)
-    {
-        // If a third argument is provided, check which difficulty
-        if (argc == 3)
-        {
-            int easy = 40;
-            int medium = 50;
-            int hard = 55;
-            if (strcmp(argv[2], "easy") == 0)
-            {
-                difficulty_level = easy;      // 40 empty slots
-                printf("Creating new easy sudoku puzzle\n");
-                sudoku_create(difficulty_level);
-            }
-            else if (strcmp(argv[2], "medium") == 0)
-            {
-                difficulty_level = medium;      // 45 empty slots
-                printf("Creating new medium sudoku puzzle\n");
-                sudoku_create(difficulty_level);
-            }
-            else if (strcmp(argv[2], "hard") == 0)
-            {
-                difficulty_level = hard;      // 50 empty slots
-                printf("Creating new hard sudoku puzzle\n");
-                sudoku_create(difficulty_level);
-            }
-            else
-            {
-                fprintf(stderr, "invalid command-line arguments or usage: ./sudoku ['create', 'solve'] ['easy', 'medium', 'hard'] \n");
-                status++;
-                return status;
-            }
-        }
-        // If difficulty_level is not set by caller, naturally set to 'easy'
-        else if (argc == 2)
-        {
-            difficulty_level = 40;
-            printf("Creating new sudoku puzzle\n");
-            sudoku_create(difficulty_level);
-        }
-        else
-        {
-            fprintf(stderr, "invalid command-line arguments or usage: ./sudoku ['create', 'solve'] ['easy', 'medium', 'hard'] \n");
-            status++;
-            return status;
-        }
-    }
-    else
-    {
-        fprintf(stderr, "invalid command-line arguments or usage: ./sudoku ['create', 'solve'] ['easy', 'medium', 'hard']");
-        status++;
-        return status;
-    }
-    
-    return status;
 }
