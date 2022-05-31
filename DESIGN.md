@@ -35,7 +35,6 @@ Beyond calling the program, we anticipate further interactions with the user, sp
 
 ### Inputs and Outputs
 
-
 Inputs and outputs will be described according to the two major modes: ‘create’ and ‘solve’.
 
 *Create*
@@ -49,68 +48,77 @@ The ‘solver’ will take a sudoku puzzle through prompted user input through s
 
 We anticipate the following modules and/or functions:
 
-*solver*, which will take a sudoku puzzle, find all possible solutions, and provide one such solution to stdout.
+**Sudoku**
 
-*creator*, which will generate a new sudoku puzzle and output it to stdout.
+*build_sudoku*, which reads a sudoku puzzle from stdin and converts it to the board struct.
 
-*valid_input*, which checks if the most recently inserted number works is valid (unique number 1-9 horizontally, vertically, and per block)
+*solver*, which will take a sudoku puzzle and use a recursive backtracking method to solve the puzzle.
 
-*read_puzzle*, which reads the sudoku from stdin and converts it to the board struct.
+*sudoku_solve*, which initializes the board and calls on the *solver* to solve the puzzle.
+
+*creator*, which will generate a new, solveable sudoku puzzle and output it to stdout.
 
 *count_solutions*, which checks how many solutions the current board has, verifying that the final sudoku has a unique solution.
 
 *compare_solutions*, which is a helper function for *count_solutions* that checks if a sudoku board solution is different from another.
 
-*print_sudoku*, which prints the final board struct to stdout.
+**Board**
+
+*board_new*, which initializes a new board struct to hold a sudoku puzzle.
+
+*board_set*, which sets a specificed slot to a given number.
+
+*board_get*, which gets the number at a specified slot.
+
+*board_print*, which prints the final board struct to stdout.
+
+*board_iterate*, which iterates through every slot on the board and applies a given function to each.
+
+*valid_input*, which checks if the most recently inserted number works is valid (unique number 1-9 horizontally, vertically, and per block).
+
+*empty_location*, which loops through the board––from the top left to the bottom right––and returns true when it finds an empty slot. It also adjusts the given *row* and *col* variables such that they will hold the corresponding values of the empty slot.
+
+*board_delete*, which deletes the struct and its comprising values.
 
 
 ### Pseudo Code
 
-* Parse Arguments
-    * Ensure 2 arguments, 2nd argument is either “solve” or “create”
-    * If ./sudoku solve, store the given puzzle in sudoku_array
-* Make Solver
-    * Iterate through every empty slot and fill the slot’s bag with possible answers. If there is only one possible answer in bag, set the slot’s number to that answer and set the boolean representing a set slot to true
-    * Then, iterate through remaining empty slots. Extract a number from the bag of possible answers and set the slot’s number to that answer. Continue iterating through empty slots until puzzle is finished or puzzle reaches a slot where no number is possible. 
-    * If puzzle reaches a slot where no number is possible, backtrack.
-    * When backtracking, the puzzle with return to the previous slot and call bag_extract() again to try a new number.
-    * Print sudoku 
-* Make Creator
-    * Fill in a puzzle by putting random numbers in each slot until the puzzle is finished or there is a slot where no number can be put
-    * Use backtracking if there is a slot with no possible answer
-    * Once the puzzle is finished, select a certain number of random slots. If removing the slot results in a puzzle with more than one possible solution, put the number back and pick a new random slot. Once enough slots have been removed, return the puzzle to the caller
-    * Print sudoku
+* Parse arguments
+   * Ensure 2 arguments, 2nd argument is either "solve" or "create"
+
+* Solver:
+* Read from stdin to receive sudoku puzzle
+* Recurse through every slot that is not given by the puzzle:
+    * Starting from one and going until 9:
+        * Check if the number fits the current puzzle (row, col, box)
+        * If it fits, continue to the next non-given slot and repeat
+        * If it doesn't fit, move onto the next number
+    * If none of the numbers work, backtrack to previous non-given slot and continue where left off.
+
+* Creator:
+* Fill in a puzzle by putting random numbers in each slot until the puzzle is finished or there is a slot where no number can be put
+* Use backtracking if there is a slot with no possible answer
+* Once the puzzle is finished, select a certain number of random slots. If removing the slot results in a puzzle with more than one possible solution, put the number back and pick a new random slot. Once enough slots have been removed, return the puzzle to the caller
+* Print sudoku
 
 
 ### Dataflow Through Modules
 
-Solver → read_puzzle → inserts number → valid_input → count_solutions → using compare_solution → print_solutions
+Solver: sudoku_solve → build_sudoku → solver → empty_location → valid_input → board_print
 
-The `solver` will call *read_puzzle*, which reads a sudoku puzzle from stdin and converts it to a board struct. It will then iterate through the board and insert numbers, using a backtracker method to correctly input numbers into slots. The *valid_input* function will determine whether the number inserted is a guaranteed answer or a tentative answer that could be wrong. At the end, the *count_solutions* function checks how many solutions the sudoku puzzle contains and uses *compare_solutions* to differentiate between completed sudoku puzzles. *print_sudoku* will display to stdout the solutions of the puzzle.
+The `solver` will use *sudoku_solve*, which calls on *build_sudoku* to read from stdin and create the sudoku board. *sudoku_solve*, after creating the board, will then call on *solver* to recursively input numbers and use a backtracking method to solve the puzzle. *solver* will use *empty_location* to find the next empty slot that has to be filled as well as *valid_input* to check if a particular number fits into the noted slot. Once the *solver* has successfully completed the puzzle, *board_print* will output to stdout the finished puzzle.
 
-Creator → valid_input → compare_solutions → print_sudoku
+Creator: → valid_input → compare_solutions → print_sudoku
 
 The `creator` will call *creator*, which will use *valid_input* to make a properly formatted and randomized Sudoku puzzle. Then, `creator` will select slots at random, remove the number held there, and call *count_solutions*. If there is more than one solution, `creator` will put the number back into the slot and try a new slot. `creator` will continue this pattern until enough slots are empty (as specified by the difficulty level). Then, *print_sudoku* will display to stdout the solutions of the puzzle.
 
 
 ### Major Data Structures
 
-* Sudoku **sudoku (array holds 9 array of structs) 
-    * Array - sudoku_array
-    * Int - numberofsolutions
-* struct** Board (array of structs):
-    * Int – number representing the slot
-    * Bag – hold possible answers
-    * Int – hold size of bag of possible answers
-    * Bool – to signal whether slot is set or modifiable (can also use the bag to signal this)
-
 We anticipate the following data structures:
 
 *board*
-This struct represents the entire sudoku board. It will hold an array of 9 arrays of 9 slots (slots**) each, which holds all the tiles on the board as well as an integer to count the number of possible solutions to the particular puzzle.
-
-*bag*
-The bag struct will be used within the slot struct, and it will hold the possible numbers that could fit a particular slot, if any.
+This struct represents the entire sudoku board. It will hold an array of 9 arrays of 9 slots each, which holds all the tiles on the sudoku board.
 
 
 ### Testing Plan
