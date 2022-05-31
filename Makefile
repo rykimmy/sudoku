@@ -29,6 +29,10 @@ test: sudoku
 
 .PHONY: all test valgrind clean
 
+valgrind: sudoku
+	valgrind $(VFLAGS) ./sudoku create medium
+	valgrind $(VFLAGS) ./sudoku solve < testBoards/tb1
+	
 clean:
 	rm -rf *.dSYM  # MacOS debugger info
 	rm -f *~ *.o

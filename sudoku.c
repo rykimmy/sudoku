@@ -314,22 +314,25 @@ int main (const int argc, char *argv[]) {
         // If a third argument is provided, check which difficulty
         if (argc == 3)
         {
+            int easy = 40;
+            int medium = 50;
+            int hard = 55;
             if (strcmp(argv[2], "easy") == 0)
             {
-                difficulty_level = 40;      // 40 empty slots
-                printf("Creating new sudoku puzzle\n");
+                difficulty_level = easy;      // 40 empty slots
+                printf("Creating new easy sudoku puzzle\n");
                 sudoku_create(difficulty_level);
             }
             else if (strcmp(argv[2], "medium") == 0)
             {
-                difficulty_level = 50;      // 50 empty slots
-                printf("Creating new sudoku puzzle\n");
+                difficulty_level = medium;      // 45 empty slots
+                printf("Creating new medium sudoku puzzle\n");
                 sudoku_create(difficulty_level);
             }
             else if (strcmp(argv[2], "hard") == 0)
             {
-                difficulty_level = 55;      // 55 empty slots
-                printf("Creating new sudoku puzzle\n");
+                difficulty_level = hard;      // 50 empty slots
+                printf("Creating new hard sudoku puzzle\n");
                 sudoku_create(difficulty_level);
             }
             else
