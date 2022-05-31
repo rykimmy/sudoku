@@ -279,17 +279,16 @@ bool valid_input(board_t *board, int row, int column, int num) {
 /**
  * loops through board and returns true if there is an empty slot, also keeps the row and column
 **/
-// bool empty_location(board_t *board, int *row, int *col) {
-//   for (*row = 0; *row < 9; *row++) {
-//     for (*col = 0; *col < 9; *col++) {
-//       if (board->grid[*row][*col]->num == 0) {
-//         printf("part 1: %d, %d", *row, *col);
-//         return true;
-//       }
-//     }
-//   }
-//   return false;
-// }
+bool empty_location(board_t *board, int *row, int *col) {
+  for (*row = 0; *row < 9; (*row)++) {
+    for (*col = 0; *col < 9; (*col)++) {
+      if (board->grid[*row][*col]->num == 0) {
+        return true;
+      }
+    }
+  }
+  return false;
+}
 
 /***************** board_print *****************/
 /**

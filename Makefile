@@ -16,18 +16,18 @@ CC = gcc
 VFLAGS = --leak-check=full --show-leak-kinds=all
 MAKE = make
 
+all: $(PROG)
+
 board: board.o $(LIBS)
 	$(CC) $(CFLAGS) $^ -o $@ 
 
-sudoku: sudoku.o $(LIBS)
+sudoku: sudoku.o board.o $(LIBS)
 	$(CC) $(CFLAGS) $^ -o $@ 
 
-sudoku_driver: sudoku_driver.o $(LIBS)
+sudoku_driver: sudoku_driver.o sudoku.o board.o $(LIBS)
 	$(CC) $(CFLAGS) $^ -o $@ 
 
 .PHONY: all test valgrind clean
-
-all: $(PROG)
 
 clean:
 	rm -rf *.dSYM  # MacOS debugger info
