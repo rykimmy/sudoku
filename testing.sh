@@ -8,7 +8,7 @@
 ###### functions ######
 
 ##___ Solve Board ___##
-# input: board file in testBoards
+# input: board file in testBoards directory
 # output: completed board
 solveBoard() {
      ./sudoku solve < testBoards/$1
@@ -19,16 +19,21 @@ solveBoard() {
 }
 
 ##___ Create Board ___##
-# input: difficulty type, 'easy', 'medium', 'hard'
+# input: one word with difficulty type, 'easy', 'medium', 'hard'
 # output: board with one solution that is solvable
 createBoard() {
-     ./sudoku create $1
+     if [ $# -ge 2 ]
+     then 
+          echo "too many arguments"
+     else
+          ./sudoku create $1
+     fi
 }
 
 ###### Test Boards ######
 
 ## Test for solver Correctness ##
-echo "test for 'solve' correctness"
+echo "-----------Test Solve-----------"
 solveBoard tb1 # test easy board
 solveBoard tb2 # test hard board
 solveBoard tb3 # test almost finished board
@@ -37,20 +42,20 @@ solveBoard empty # test for solving an empty board
 #solveBoard wrong # test for solving a wrong board, ###### ARE WE TESTING FOR AN INCORRECT BOARD? ######
 
 ## Test for incorrect 'solve' inputs ##
-echo "test for 'solve' inputs"
+echo "----------Test Solve Inputs-----------"
 solveBoard # test no input
 solveBoard null # test non-existent file
 solveBoard null null # test too many inputs
 
 ## Test for board creation ##
-echo "test for 'create' correctness"
+echo "----------Test Create-----------"
 createBoard easy # test easy board
 createBoard medium # test medium board
 createBoard hard # test hard board
-createBoard hard # test for duplicate difference
+# createBoard hard # test for duplicate difference
 
 ## Test for incorrect 'create' inputs ##
-echo "test for 'create' arguments"
+echo "----------Test Create Inputs-----------"
 createBoard super hard # too many words
 createBoard killer # not correct input
 createBoard easy money # correct first input but too many arguments
