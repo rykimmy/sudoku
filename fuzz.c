@@ -15,13 +15,13 @@
 #include "../libcs50/file.h"
 #include "board.h"
 
-static void check_puzzle(char *filename);
+board_t *create_puzzle(char *filename);
 static void check_duplicates(board_t *board);
-static void check_sum(board_t *board);
+// static void check_sum(board_t *board);
 
 
 
-static void check_puzzle(char *filename){
+board_t *create_puzzle(char *filename){
      // open file
      FILE *fp;
      fp = assertp(fopen(filename, "r"), "error opening file \n");
@@ -60,16 +60,36 @@ static void check_puzzle(char *filename){
           row += 1; // update row
           col = 0; // reset column
           total = 0; // reset total 
-          printf("row is valid! \n");
           free(line);
+          // if reaches here, row is valid
      }
-     check_duplicates(board);
- 
+     return board;
 }
 
 static void check_duplicates(board_t *board)
 {
-     
+     // checking the rows
+     for (int k = 0; k < 9; k++){
+          // check each column
+          for (int i = 0; i < 9; i++){
+               // compare to other slots in the colum
+               for (int j = 0; j < 9 ; j++) {
+                    if ((board_get(board, k, i) == board_get(board, k, j))&& (i != j)){
+                         fprintf(stderr, "There are duplicates in row %d \n", k);
+                         exit(4);
+                    }
+                    if ((board_get(board, i, k) == board_get(board, j, k))&& (i != j)){
+                         fprintf(stderr, "There are duplicates in column %d \n", k);
+                         exit(4);
+                    }
+               }
+          }
+     }
+}
+
+static void check_sum(board_t *board)
+{
+
 }
 
 int main (const int argc, char *argv[]) {
@@ -78,6 +98,7 @@ int main (const int argc, char *argv[]) {
           exit(3);
      } 
      char *filename = argv[1];
-     check_puzzle(filename);
+     board_t *board = create_puzzle(filename);
+     check_duplicates(board);
      printf("passed \n");
 } 
