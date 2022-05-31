@@ -56,7 +56,7 @@ Returns:
     true, if the puzzle has one solution
     false, if the puzzle has multiple solutions
 */
-bool unique_solution(board_t *sudoku);
+static bool unique_solution(board_t *sudoku);
 
 /***************** build_sudoku *****************/
 /*
@@ -67,7 +67,7 @@ Takes:
 Returns:
     A board struct holding inputted data
 */
-board_t *build_sudoku();
+static board_t *build_sudoku();
 
 /***************** sudoku_solve *****************/
 /*
@@ -79,7 +79,7 @@ Returns:
     True if board is solved
     False if board cannot be solved
 */
-bool sudoku_solve(board_t* sudoku);
+static bool sudoku_solve(board_t* sudoku);
 
 /***************** random_list *****************/
 /*
@@ -90,7 +90,7 @@ Takes:
 Returns:
     A randomized list of numbers 1 - 9
 */
-int *random_list();
+static int *random_list();
 
 /***************** remove_slots *****************/
 /*
@@ -102,7 +102,7 @@ Takes:
 Returns:
     Nothing
 */
-void remove_slots(board_t* board, int empty_slots, int emptied);
+static void remove_slots(board_t* board, int empty_slots, int emptied);
 
 /***************** solver_random *****************/
 /*
@@ -128,4 +128,4 @@ Takes:
 Returns:
     A sudoku puzzle
 */
-board_t* sudoku_create(int difficulty_level);
+static void sudoku_create(int difficulty_level);

@@ -91,7 +91,7 @@ bool empty_location(board_t *board, int *row, int *col);
 
 /***************** board_print *****************/
 /**
- * Prints the board, uses '*' for an empty slot.
+ * Prints the board, uses '0' for an empty slot.
  *
  * Takes:
  *     board_t* board – the sudoku board
