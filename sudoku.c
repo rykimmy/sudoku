@@ -1,7 +1,9 @@
 /* 
  * sudoku.c - Sudoku module that holds the APIs for the sudoku 'create' and 'solve' functionality
  * 
- * The 'sudoku' module is split into two major modes: 'solve' and 'create'. The 'solve' mode will take an unsolved sudoku puzzle through stdin, solve the puzzle, and output the solution to stdout. The 'create' mode will take no stdin and instead create a new sudoku puzzle that will be outputted to stdout.
+ * The 'sudoku' module is split into two major modes: 'solve' and 'create'. 
+ * The 'solve' mode will take an unsolved sudoku puzzle through stdin, solve the puzzle, and output the solution to stdout. 
+ * The 'create' mode will take no stdin and instead create a new sudoku puzzle that will be outputted to stdout.
  * 
  *
  * DataNiners: Ashley Liang, Matthew Kim, Lucy Korte, Ryan Kim
@@ -17,27 +19,23 @@
 
 /***************** solver *****************/
 /*
-Solver takes a non-empty non-solved sudoku board and recursively runs through each slot using a backtracking method to solve the puzzle.
-
-Takes:
-    board_t* – a pointer to a non-empty non-solved sudoku puzzle
-Returns:
-    true, if successfully solved
-    false, if error
+* See sudoku.h for more information
 */
 static bool solver(board_t* sudoku)
 {
     int row, col;
 
     //goes through sudoku, checks if there are empty spots
-    //if empty, parameter keeps the row/column through param
+    //if empty spot is found, row and col set to empty spot
     if (!empty_location(sudoku, &row, &col)) {
         return true;
     }
 
 
     //using the row/column values from empty_location()
+    //loop through numbers 1 - 9
     for (int num = 1; num < 10; num++) {
+        //check if number can be inputted
         if (valid_input(sudoku, row, col, num)) {
 
             //tentatively set
@@ -47,26 +45,18 @@ static bool solver(board_t* sudoku)
             if (solver(sudoku)) {
                 return true;
             }
-            //doesn't work, go back to 0
+            //doesn't work, reset slot to 0
             board_set(sudoku, row, col, 0);
         }
     }
-
+    // puzzle not solvable
     return false;
 }
 \
 
 /***************** solver_backward *****************/
 /*
-Solver_backward takes a non-empty non-solved sudoku board and recursively runs through each slot using a backtracking method to solve the puzzle.
-Solves puzzle by trying numbers looping from 9 down to 1
-Used to test if a puzzle has multiple solutions
-
-Takes:
-    board_t* – a pointer to a non-empty non-solved sudoku puzzle
-Returns:
-    true, if successfully solved
-    false, if error
+* See sudoku.h for more information
 */
 static bool solver_backward(board_t* sudoku)
 {
@@ -94,73 +84,73 @@ static bool solver_backward(board_t* sudoku)
         
         }
     }
+    //puzzle not solvable
     return false;
 }
 
 /***************** unique_solution *****************/
 /*
-Unique_solution tests if a puzzle has more than one solution
-
-Takes:
-    board_t* – a pointer to a sudoku puzzle
-Returns:
-    true, if the puzzle has one solution
-    false, if the puzzle has multiple solutions
+* See sudoku.h for more information
 */
 bool unique_solution(board_t *sudoku) {
+    // make copies of the sudoku board to check for multiple solutions
     board_t *copy_forward = board_copy(sudoku);
     board_t *copy_backward = board_copy(sudoku);
     solver(copy_forward);
     solver_backward(copy_backward);
+    // check if the puzzles are the same when solved with different solvers
     for (int i=0; i < 9; i++){
         for (int j=0; j < 9; j++){
             if (board_get(copy_forward, i, j) != board_get(copy_backward, i, j)) {
+                board_delete(copy_forward);
+                board_delete(copy_backward);
                 return false;
             }
         }
     }
+    // free memory
+    board_delete(copy_forward);
+    board_delete(copy_backward);
     return true;
 }
 
-
+/***************** build_sudoku *****************/
+/*
+* See sudoku.h for more information
+*/
 board_t *build_sudoku() 
 {
     board_t* sudoku = board_new();
     int num;
-      for (int i = 0; i < 9; i++) {
-          for (int j = 0; j < 9; j++) {
-              //only need to set if not 0 because automatically 0 and false
-              if (scanf("%d", &num) == 1) {
-                  board_set(sudoku, i, j, num);
-              }
-          }
-      }
+    // loop through slots in board, read number from stdin
+    for (int i = 0; i < 9; i++) {
+        for (int j = 0; j < 9; j++) {
+            if (scanf("%d", &num) == 1) {
+                board_set(sudoku, i, j, num);
+            }
+        }
+    }
     return sudoku;
 }
 
-
+/***************** sudoku_solve *****************/
+/*
+* See sudoku.h for more information
+*/
 bool sudoku_solve(board_t* sudoku) {
+    // print the solved board if the board is solvable
     if (solver(sudoku)) {
         board_print(sudoku);
+        board_delete(sudoku);
         return true;
     }
     else {
         fprintf(stderr, "sudoku not solvable\n");
+        board_delete(sudoku);
         return false;
     }
 }
 
-bool sudoku_solve_backward(board_t* sudoku) {
-    
-    if (solver_backward(sudoku)) {
-        board_print(sudoku);
-        return true;
-    }
-    else {
-        fprintf(stderr, "sudoku not solvable\n");
-        return false;
-    }
-}
 
 ///////////////////////////////////////////
 /****************** create ****************/
@@ -168,15 +158,13 @@ bool sudoku_solve_backward(board_t* sudoku) {
 
 /***************** random_list *****************/
 /*
-Random_list makes a randomized list of numbers 1 - 9
-
-Takes:
-    No parameters
-Returns:
-    A randomized list of numbers 1 - 9
+* See sudoku.h for more information
 */
 int *random_list() {
     int *list = calloc(sizeof(int), 9);
+    if (list == NULL) {
+        fprintf(stderr, "Error allocating memory\n");
+    }
     for (int i = 1; i < 10; i++) {
         list[i - 1] = i;
     }
@@ -191,13 +179,17 @@ int *random_list() {
 }
 
 
-
+/***************** remove_slots *****************/
+/*
+* See sudoku.h for more information
+*/
 void remove_slots(board_t* board, int empty_slots, int emptied)
 {
     srand(time(0));
     
     int row = 0;
     int col = 0;
+    // continue emptying slots until correct number are emptied
     while (emptied < empty_slots) {
         
         // Generate random number
@@ -234,16 +226,9 @@ void remove_slots(board_t* board, int empty_slots, int emptied)
 
 /***************** solver_random *****************/
 /*
-Solver_random takes a non-empty non-solved sudoku board and recursively runs through each slot using a backtracking method to solve the puzzle.
-Solver_random tries numbers based on a randomized list, to generate puzzles that differ every time
-
-Takes:
-    board_t* – a pointer to a non-empty non-solved sudoku puzzle
-Returns:
-    true, if successfully solved
-    false, if error
+* See sudoku.h for more information
 */
-static bool solver_random(board_t* sudoku, int *list)
+static bool solver_random(board_t* sudoku)
 {
     int row, col;
 
@@ -255,51 +240,42 @@ static bool solver_random(board_t* sudoku, int *list)
 
 
     //using the row/column values from empty_location()
-    free(list);
-    list = random_list();
     for (int i = 0; i < 9; i++) {
-        
+        // create a random list to pull numbers from
+        int *list = random_list();
         if (valid_input(sudoku, row, col, list[i])) {
             //tentatively set
             board_set(sudoku, row, col, list[i]);
-    
+           
 
             //continue with solving, if works, return true, success
-            if (solver_random(sudoku, list)) {
+            if (solver_random(sudoku)) {
+                free(list);
                 return true;
             }
             //doesn't work, go back to 0
             board_set(sudoku, row, col, 0);
-        
         }
+        free(list);
     }
-
+    // puzzle not solvable
     return false;
 }
 
-bool sudoku_solve_random(board_t* sudoku) {
-    int *list = random_list();
-    if (solver_random(sudoku, list)) {
-      
-        return true;
-    }
-    else {
-        fprintf(stderr, "sudoku not solvable\n");
-        return false;
-    }
-}
 
-
-
+/***************** sudoku_create *****************/
+/*
+* See sudoku.h for more information
+*/
 board_t* sudoku_create(int difficulty_level)
 {   
-    // Setup
+    // Create empty board
     board_t* board = board_new();
     int empty_slots = difficulty_level;       // can change this later based on the difficulty_level
     int emptied = 0;
     
-    // Fills in the rest of the slots --> have to check whether this will work (do we need to set the bool of each of the matrices slots as true?)
-    if (!sudoku_solve_random(board)) {
+    // check if solver_random made a puzzle
+    if (!solver_random(board)) {
         fprintf(stderr, "sudoku_create failed: sudoku_solve returned false\n");
         return false;
     }
@@ -307,15 +283,24 @@ board_t* sudoku_create(int difficulty_level)
     // Remove elements randomly to complete the game
     remove_slots(board, empty_slots, emptied);
     board_print(board);
+    board_delete(board);
     return board;
 }
 
+
+/***********************************************/
 int main (const int argc, char *argv[]) {
     int status = 0;
     int difficulty_level;
     
     // Parsing Arguments:
-    
+
+
+    // test number of arugments
+    if (argc > 4 || argc < 2){
+        fprintf(stderr, "invalid command-line arguments or usage: ./sudoku ['create', 'solve'] ['easy', 'medium', 'hard'] \n");
+        return status;
+    }
     // 'solve' mode
     if (strcmp(argv[1], "solve") == 0)
     {
@@ -329,27 +314,30 @@ int main (const int argc, char *argv[]) {
         // If a third argument is provided, check which difficulty
         if (argc == 3)
         {
+            int easy = 40;
+            int medium = 50;
+            int hard = 55;
             if (strcmp(argv[2], "easy") == 0)
             {
-                difficulty_level = 40;      // 40 empty slots
-                printf("Creating new sudoku puzzle\n");
+                difficulty_level = easy;      // 40 empty slots
+                printf("Creating new easy sudoku puzzle\n");
                 sudoku_create(difficulty_level);
             }
             else if (strcmp(argv[2], "medium") == 0)
             {
-                difficulty_level = 45;      // 45 empty slots
-                printf("Creating new sudoku puzzle\n");
+                difficulty_level = medium;      // 45 empty slots
+                printf("Creating new medium sudoku puzzle\n");
                 sudoku_create(difficulty_level);
             }
             else if (strcmp(argv[2], "hard") == 0)
             {
-                difficulty_level = 50;      // 50 empty slots
-                printf("Creating new sudoku puzzle\n");
+                difficulty_level = hard;      // 50 empty slots
+                printf("Creating new hard sudoku puzzle\n");
                 sudoku_create(difficulty_level);
             }
             else
             {
-                fprintf(stderr, "invalid command-line arguments\nusage: ./sudoku ['create', 'solve'] ['easy', 'medium', 'hard']");
+                fprintf(stderr, "invalid command-line arguments or usage: ./sudoku ['create', 'solve'] ['easy', 'medium', 'hard'] \n");
                 status++;
                 return status;
             }
@@ -363,14 +351,14 @@ int main (const int argc, char *argv[]) {
         }
         else
         {
-            fprintf(stderr, "invalid command-line arguments\nusage: ./sudoku ['create', 'solve'] ['easy', 'medium', 'hard']");
+            fprintf(stderr, "invalid command-line arguments or usage: ./sudoku ['create', 'solve'] ['easy', 'medium', 'hard'] \n");
             status++;
             return status;
         }
     }
     else
     {
-        fprintf(stderr, "invalid command-line arguments\usage: ./sudoku ['create', 'solve'] ['easy', 'medium', 'hard']");
+        fprintf(stderr, "invalid command-line arguments or usage: ./sudoku ['create', 'solve'] ['easy', 'medium', 'hard']");
         status++;
         return status;
     }

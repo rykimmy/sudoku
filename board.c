@@ -29,22 +29,25 @@ typedef struct board {
 
 /***************** board_new *****************/
 /**
- * Builds a new board and calls slot_new on each slot. The caller is responsible for freeing memory.
- * 
- * Takes:
- *     nothing
- * Returns:
- *     board_t* – a pointer to the newly created board.
+ * See board.h for more information
 **/
 board_t *board_new() 
 {
   // Initializing the board and set of slots
   board_t *board = malloc(sizeof(board_t));
+  if (board == NULL) {
+    fprintf(stderr, "Error allocating memory\n");
+  }
   int **row = calloc(9, sizeof(int *));
-  
+  if (row == NULL) {
+    fprintf(stderr, "Error allocating memory\n");
+  }
   // Setting up the grid
   for (int i = 0; i < 9; i++) {
     int *column = calloc(9, sizeof(int));
+    if (column == NULL) {
+      fprintf(stderr, "Error allocating memory\n");
+    }
     row[i] = column;
   }
   
@@ -55,26 +58,16 @@ board_t *board_new()
       board->grid[i][j] = 0;
     }
   }
-  
   return board;
 }
 
 /***************** board_set *****************/
 /**
- * Sets the number of a given slot in the board.
- *
- * Takes:
- *     board_t* board – the board in which a slot will be set
- *     int row – the row of the slot to be changed
- *     int column – the column of the slot to be changed
- *     bool given – whether or not the slot will be part of the puzzle a slot to be filled
- * Returns:
- *     nothing
+ * See board.h for more information
 **/
 void board_set(board_t *board, int row, int column, int num) 
 {
   if (board != NULL) { // validate that the board_set works
-    //validate that the row and column are within boundaries
       board->grid[row][column] = num;
   }
 }
@@ -82,14 +75,7 @@ void board_set(board_t *board, int row, int column, int num)
 
 /***************** board_get *****************/
 /**
- * Gets the number of a slot in the board.
- * 
- * Takes:
- *     board_t* board – a pointer to the sudoku puzzle
- *     int row – the row of the slot to get
- *     int column – the column of the slot to get
- * Returns:
- *     int – the number of the specified slot
+ * See board.h for more information
 **/
 int board_get(board_t *board, int row, int column) 
 {
@@ -105,16 +91,7 @@ int board_get(board_t *board, int row, int column)
 
 /***************** valid_input *****************/
 /**
- * Validates the board by checking a given slot with its row, column, and box.
- * 
- * Takes:
- *     board_t* board – the sudoku board
- *     int row – the row of the slot that's being validated
- *     int column – the column of the slot that's being validated
- *     int num – the number that will be checked
- * Returns:
- *     true, if the number fits into the slot
- *     false, if the number cannot be added to the specified slot
+ * See board.h for more information
 **/
 bool valid_input(board_t *board, int row, int column, int num) {
   // check if same number is in row
@@ -153,73 +130,58 @@ bool valid_input(board_t *board, int row, int column, int num) {
 
 /***************** empty_location *****************/
 /**
- * Iterates through the slots of the board, beginning at the top left and moving to the right. Upon finding an empty slot––one that has not been set and is not given––sets the row and col values to the slot.
- *
- * Takes:
- *     board_t* board – the sudoku board
- *     int* row – pointer to the row of the slot being checked
- *     int* col – pointer to the column of the slot being checked
- * Returns:
- *     true, if the function finds an empty slot
- *     false, if the function does not find an empty slot (meaning all slots are filled and the puzzle is solved)
+ * See board.h for more information
 **/
 bool empty_location(board_t *board, int *row, int *col) {
   // Iterating through every slot
   for (*row = 0; *row < 9; (*row)++) {
     for (*col = 0; *col < 9; (*col)++) {
+      // return true if empty slot found
       if (board->grid[*row][*col] == 0) {
         return true;
-      }
-      
+      }    
     }
   }
+  // no empty slots
   return false;
 }
 
 /***************** board_print *****************/
 /**
- * Prints the board, uses '*' for an empty slot.
- *
- * Takes:
- *     board_t* board – the sudoku board
- * Returns:
- *     nothing
+ * See board.h for more information
 **/
 void board_print(board_t *board)
 {
   // Iterating through every slot and printing each
-  for (int i=0; i < 9; i++){
-    for (int j=0; j < 9; j++){
-        int num = board->grid[i][j]; 
-        printf("%d ", num);
-    }
-    printf("\n");
+  if (board != NULL) {
+      for (int i=0; i < 9; i++){
+        for (int j=0; j < 9; j++){
+            int num = board->grid[i][j]; 
+            printf("%d ", num);
+        }
+        printf("\n");
+      }
   }
 }
 
 /***************** board_delete *****************/
 /**
- * Deletes each slot, then deletes the board
- *
- * Takes:
- *     board_t* board - the sudoku board
- * Returns:
- *     nothing
+ * See board.h for more information
 **/
 void board_delete(board_t *board)
 {
+  if (board != NULL) {
+    for (int i = 0; i < 9; i++) {
+      free(board->grid[i]);
+    }
+    free(board->grid);
     free(board);
+  }
 }
 
 /***************** board_copy *****************/
 /**
- * Creates a copy of the sudoku board, copying each slot to the copied board.
- *
- * Takes:
- *     board_t* original – the original sudoku board
- *
- * Returns:
- *     board_t* – the copied board
+ * See board.h for more information
 **/
 board_t *board_copy(board_t *original) 
 {
@@ -232,6 +194,5 @@ board_t *board_copy(board_t *original)
       copy->grid[i][j] = original->grid[i][j];
     }
   }
-  
   return copy;
 }

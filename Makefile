@@ -24,11 +24,15 @@ all: $(PROG)
 sudoku: sudoku.o board.o $(LIBS)
 	$(CC) $(CFLAGS) $^ -o $@ 
 
-# sudoku_driver: sudoku_driver.o sudoku.o board.o $(LIBS)
-# 	$(CC) $(CFLAGS) $^ -o $@ 
+test: sudoku
+	./testing.sh &> testing.out
 
 .PHONY: all test valgrind clean
 
+valgrind: sudoku
+	valgrind $(VFLAGS) ./sudoku create medium
+	valgrind $(VFLAGS) ./sudoku solve < testBoards/tb1
+	
 clean:
 	rm -rf *.dSYM  # MacOS debugger info
 	rm -f *~ *.o
