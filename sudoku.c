@@ -152,6 +152,7 @@ bool solver(board_t* sudoku)
             }
             //doesn't work, go back to 0
             board_set(sudoku, row, col, 0, false);
+            
         }
     }
 
