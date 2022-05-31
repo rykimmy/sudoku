@@ -124,3 +124,4 @@ Works as a driver function for 'create' as it generates a random puzzle given a 
 
 ### Testing plan
 
+A detailed breakdown of our testing can be found in TESTING.md.
