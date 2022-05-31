@@ -18,6 +18,7 @@
 static void check_puzzle(char *filename);
 static void check_duplicates(board_t *board);
 static void check_sum(board_t *board);
+static bool check_changed_givens(board_t *original, board_t *check);
 
 
 
@@ -72,6 +73,19 @@ static void check_duplicates(board_t *board)
      
 }
 
+static bool check_changed_givens(board_t *original, board_t *check) {
+     for (int i = 0; i < 9; i++){
+          for (int j = 0; j < 9; j++) {
+               if (board_get(original, i, j) != 0) {
+                    if (board_get(original, i, j) != board_get(check, i, j)) {
+                         return false;
+                    }
+               }
+          }
+     }
+     return true;
+}
+
 int main (const int argc, char *argv[]) {
      if (argc != 2){
           fprintf(stderr, "too many arguments: please use file as parameter ./fuzz file \n");
@@ -80,4 +94,5 @@ int main (const int argc, char *argv[]) {
      char *filename = argv[1];
      check_puzzle(filename);
      printf("passed \n");
+     
 } 
