@@ -322,6 +322,12 @@ int main (const int argc, char *argv[]) {
     int difficulty_level;
     
     // Parsing Arguments:
+
+    // test number of arugments
+    if (argc > 4 || argc < 1){
+        fprintf(stderr, "invalid command-line arguments or usage: ./sudoku ['create', 'solve'] ['easy', 'medium', 'hard'] \n");
+        return status;
+    }
     
     // 'solve' mode
     if (strcmp(argv[1], "solve") == 0)
@@ -356,7 +362,7 @@ int main (const int argc, char *argv[]) {
             }
             else
             {
-                fprintf(stderr, "invalid command-line arguments\nusage: ./sudoku ['create', 'solve'] ['easy', 'medium', 'hard']");
+                fprintf(stderr, "invalid command-line arguments or usage: ./sudoku ['create', 'solve'] ['easy', 'medium', 'hard'] \n");
                 status++;
                 return status;
             }
@@ -370,14 +376,14 @@ int main (const int argc, char *argv[]) {
         }
         else
         {
-            fprintf(stderr, "invalid command-line arguments\nusage: ./sudoku ['create', 'solve'] ['easy', 'medium', 'hard']");
+            fprintf(stderr, "invalid command-line arguments or usage: ./sudoku ['create', 'solve'] ['easy', 'medium', 'hard'] \n");
             status++;
             return status;
         }
     }
     else
     {
-        fprintf(stderr, "invalid command-line arguments\usage: ./sudoku ['create', 'solve'] ['easy', 'medium', 'hard']");
+        fprintf(stderr, "invalid command-line arguments or usage: ./sudoku ['create', 'solve'] ['easy', 'medium', 'hard']");
         status++;
         return status;
     }
