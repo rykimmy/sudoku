@@ -30,8 +30,8 @@ test: sudoku
 valgrind: sudoku
 	bash -v valgrind.sh &> valgrind.out
 
-# fuzz: fuzz.o $(LIBS)
-# 	$(CC) $(CFLAGS) $^ -o $@ 
+fuzz: fuzz.o board.o $(LIBS)
+	$(CC) $(CFLAGS) $^ -o $@ 
 
 .PHONY: all test valgrind clean
 

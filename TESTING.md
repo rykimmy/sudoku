@@ -66,7 +66,8 @@ usage: ./testing.sh ['solve','create'] ['difficulty'] \n
 ```
 # fuzztest testing
 * uses bash to do a fuzz test. essentially, creates a new random sudoku puzzle and then pipes it into solver.
-d00
+
+
 * In bash, have the creator produce a puzzle every second because the solver will read the puzzle before the creator has had time to write the puzzle down
 - this output uses n = 5
 ```
@@ -308,3 +309,4 @@ Creating new sudoku puzzle
 ==32645== For counts of detected and suppressed errors, rerun with: -v
 ==32645== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0) 
 ```
+
