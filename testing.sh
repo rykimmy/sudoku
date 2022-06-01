@@ -32,6 +32,10 @@ createBoard() {
 
 ###### Test Boards ######
 
+## Test incorrect number of arguments
+echo "wrong number of arguments"
+./sudoku
+
 ## Test for solver Correctness ##
 echo "-----------Test Solve-----------"
 solveBoard tb1 # test easy board
@@ -39,8 +43,6 @@ solveBoard tb2 # test hard board
 solveBoard tb3 # test almost finished board
 solveBoard empty # test for solving an empty board
 solveBoard no solution # test for a board with no solution
-
-#solveBoard wrong # test for solving a wrong board, ###### ARE WE TESTING FOR AN INCORRECT BOARD? ######
 
 ## Test for incorrect 'solve' inputs ##
 echo "----------Test Solve Inputs-----------"

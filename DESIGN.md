@@ -136,10 +136,13 @@ This struct represents the entire sudoku board. It will hold an array of 9 array
 Integration Testing
 * Test for command-line arguments
 * Test with incorrect number of arguments
-* Test with no difficulty level
-* Test with invalid difficulty level
-* Test ./sudoku solve with a puzzle with one solution
-* Test ./sudoku solve with a puzzle with multiple solutions
+* Test solve with easy board
+* Test solve with difficult board
+* Test solve on empty board
+* Test solve for an unsolvable board
+* Test create easy board
+* Test create medium board
+* Test create hard board
 * Valgrind ./sudoku create
 * Valgrind ./sudoku solve 
 
