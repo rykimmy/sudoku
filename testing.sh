@@ -38,6 +38,7 @@ solveBoard tb1 # test easy board
 solveBoard tb2 # test hard board
 solveBoard tb3 # test almost finished board
 solveBoard empty # test for solving an empty board
+solveBoard no solution # test for a board with no solution
 
 #solveBoard wrong # test for solving a wrong board, ###### ARE WE TESTING FOR AN INCORRECT BOARD? ######
 
@@ -56,6 +57,7 @@ createBoard hard # test hard board
 
 ## Test for incorrect 'create' inputs ##
 echo "----------Test Create Inputs-----------"
+createBoard # no difficuty
 createBoard super hard # too many words
 createBoard killer # not correct input
 createBoard easy money # correct first input but too many arguments

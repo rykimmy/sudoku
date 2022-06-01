@@ -133,15 +133,6 @@ This struct represents the entire sudoku board. It will hold an array of 9 array
 
 ### Testing Plan
 
-Unit Testing
-* Test *valid_input* for cases which should return a valid input and cases which should not
-* Test *count_solutions*
-* Test *read_puzzle*
-* Test *print_puzzle*
-* Test ./sudoku create, printing out the intermediate solved puzzle and then the final puzzle with numbers taken out
-* Test ./sudoku solve for a unique puzzle, printing out the input puzzle and then printing out the final puzzle
-
-
 Integration Testing
 * Test for command-line arguments
 * Test with incorrect number of arguments
@@ -155,4 +146,5 @@ Integration Testing
 
 Fuzz Testing
 * Fuzz testing will use ./sudoku create and solve to create random puzzles and test ./sudoku solve's ability to solve them
+* The Fuzz test will also test the validity of each sudoku puzzle created
 

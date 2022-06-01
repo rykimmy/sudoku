@@ -137,7 +137,7 @@ static void sudoku_create(int difficulty_level)
     // check if solver_random made a puzzle
     if (!solver_random(board)) {
         fprintf(stderr, "sudoku_create failed: sudoku_solve returned false\n");
-        return false;
+        exit(1);
     }
     
     // Remove elements randomly to complete the game

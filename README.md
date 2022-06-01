@@ -44,9 +44,13 @@ Additionally, we created a graphical interface for the Sudoku board in Python. T
 To compile, simply `make`.
 
 ### Testing
+* All tests redirect to [file].out
 
-
-
-To test, redirecting the output to testing.out, simply `make test &> testing.out`.
+To test, simply `make test`.
 
 To test with valgrind, `make valgrind`.
+
+To test, run `make fuzzTest` to run a fuzz test with n = 3
+
+Can also test individual files using fuzz.c
+- use commands like `./fuzz ['filled','check'] ['file1'] ['file2']`

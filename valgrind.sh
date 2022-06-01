@@ -15,10 +15,14 @@ VALGRIND='valgrind --leak-check=full --show-leak-kinds=all'
 $VALGRIND ./sudoku solve < testBoards/tb1
 $VALGRIND ./sudoku solve < testBoards/tb2
 $VALGRIND ./sudoku solve < testBoards/tb3
-$VALGRIND ./sudoku solve < testBoards/wrong
+$VALGRIND ./sudoku solve < testBoards/nosolution
 $VALGRIND ./sudoku solve < testBoards/empty
 
 ## create ##
 $VALGRIND ./sudoku create easy
 $VALGRIND ./sudoku create medium
 $VALGRIND ./sudoku create hard
+
+## fuzz ##
+$VALGRIND ./fuzz check testBoards/solved
+$VALGRIND ./fuzz filled testBoards/unsolved testBoards/solved
