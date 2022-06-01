@@ -101,6 +101,55 @@ int main (const int argc, char *argv[]) {
     return status;
 }
 
+
+/***************** sudoku_solve *****************/
+/*
+* See sudoku.h for more information
+*/
+static bool sudoku_solve() 
+{
+    board_t* sudoku = build_sudoku();
+    // print the solved board if the board is solvable
+    if (solver(sudoku)) {
+        board_print(sudoku);
+        board_delete(sudoku);
+        return true;
+    }
+    else {
+        fprintf(stderr, "sudoku not solvable\n");
+        board_delete(sudoku);
+        return false;
+    }
+}
+
+
+/***************** sudoku_create *****************/
+/*
+* See sudoku.h for more information
+*/
+static void sudoku_create(int difficulty_level)
+{   
+    // Create empty board
+    board_t* board = board_new();
+    int empty_slots = difficulty_level;       // can change this later based on the difficulty_level
+    int emptied = 0;
+    
+    // check if solver_random made a puzzle
+    if (!solver_random(board)) {
+        fprintf(stderr, "sudoku_create failed: sudoku_solve returned false\n");
+        exit(1);
+    }
+    
+    // Remove elements randomly to complete the game
+    remove_slots(board, empty_slots, emptied);
+    board_print(board);
+    board_delete(board);
+}
+
+///////////////////////////////////////////
+/*helper functions for sudoku solve/create*/
+///////////////////////////////////////////
+
 /***************** solver *****************/
 /*
 * See sudoku.h for more information
@@ -136,7 +185,7 @@ static bool solver(board_t* sudoku)
     // puzzle not solvable
     return false;
 }
-\
+
 
 /***************** solver_backward *****************/
 /*
@@ -172,32 +221,6 @@ static bool solver_backward(board_t* sudoku)
     return false;
 }
 
-/***************** unique_solution *****************/
-/*
-* See sudoku.h for more information
-*/
-static bool unique_solution(board_t *sudoku) 
-{
-    // make copies of the sudoku board to check for multiple solutions
-    board_t *copy_forward = board_copy(sudoku);
-    board_t *copy_backward = board_copy(sudoku);
-    solver(copy_forward);
-    solver_backward(copy_backward);
-    // check if the puzzles are the same when solved with different solvers
-    for (int i=0; i < 9; i++){
-        for (int j=0; j < 9; j++){
-            if (board_get(copy_forward, i, j) != board_get(copy_backward, i, j)) {
-                board_delete(copy_forward);
-                board_delete(copy_backward);
-                return false;
-            }
-        }
-    }
-    // free memory
-    board_delete(copy_forward);
-    board_delete(copy_backward);
-    return true;
-}
 
 /***************** build_sudoku *****************/
 /*
@@ -218,30 +241,6 @@ static board_t *build_sudoku()
     return sudoku;
 }
 
-/***************** sudoku_solve *****************/
-/*
-* See sudoku.h for more information
-*/
-static bool sudoku_solve() 
-{
-    board_t* sudoku = build_sudoku();
-    // print the solved board if the board is solvable
-    if (solver(sudoku)) {
-        board_print(sudoku);
-        board_delete(sudoku);
-        return true;
-    }
-    else {
-        fprintf(stderr, "sudoku not solvable\n");
-        board_delete(sudoku);
-        return false;
-    }
-}
-
-
-///////////////////////////////////////////
-/****************** create ****************/
-///////////////////////////////////////////
 
 /***************** random_list *****************/
 /*
@@ -351,26 +350,29 @@ static bool solver_random(board_t* sudoku)
     return false;
 }
 
-
-/***************** sudoku_create *****************/
+/***************** unique_solution *****************/
 /*
 * See sudoku.h for more information
 */
-static void sudoku_create(int difficulty_level)
-{   
-    // Create empty board
-    board_t* board = board_new();
-    int empty_slots = difficulty_level;       // can change this later based on the difficulty_level
-    int emptied = 0;
-    
-    // check if solver_random made a puzzle
-    if (!solver_random(board)) {
-        fprintf(stderr, "sudoku_create failed: sudoku_solve returned false\n");
-        return false;
+static bool unique_solution(board_t *sudoku) 
+{
+    // make copies of the sudoku board to check for multiple solutions
+    board_t *copy_forward = board_copy(sudoku);
+    board_t *copy_backward = board_copy(sudoku);
+    solver(copy_forward);
+    solver_backward(copy_backward);
+    // check if the puzzles are the same when solved with different solvers
+    for (int i=0; i < 9; i++){
+        for (int j=0; j < 9; j++){
+            if (board_get(copy_forward, i, j) != board_get(copy_backward, i, j)) {
+                board_delete(copy_forward);
+                board_delete(copy_backward);
+                return false;
+            }
+        }
     }
-    
-    // Remove elements randomly to complete the game
-    remove_slots(board, empty_slots, emptied);
-    board_print(board);
-    board_delete(board);
+    // free memory
+    board_delete(copy_forward);
+    board_delete(copy_backward);
+    return true;
 }

@@ -57,6 +57,7 @@ createBoard hard # test hard board
 
 ## Test for incorrect 'create' inputs ##
 echo "----------Test Create Inputs-----------"
+createBoard # no difficuty
 createBoard super hard # too many words
 createBoard killer # not correct input
 createBoard easy money # correct first input but too many arguments
