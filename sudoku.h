@@ -111,7 +111,7 @@ Solver_random tries numbers based on a randomized list, to generate puzzles that
 Allows sudoku_create() to generate a random puzzle
 
 Takes:
-    board_t* – a pointer to a non-empty non-solved sudoku puzzle
+    board_t* – a pointer to an empty sudoku puzzle
 Returns:
     true, if successfully solved
     false, if error

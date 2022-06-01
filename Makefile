@@ -27,17 +27,17 @@ sudoku: sudoku.o board.o $(LIBS)
 test: sudoku
 	./testing.sh &> testing.out
 
-valgrind: sudoku
+valgrind: sudoku fuzz.o
 	bash -v valgrind.sh &> valgrind.out
+
+# Tests fuzz.sh with n=3
+fuzzTest: fuzz.o board.o
+	bash -v fuzz.sh 3 &> fuzz.out 
 
 fuzz: fuzz.o board.o $(LIBS)
 	$(CC) $(CFLAGS) $^ -o $@ 
 
 .PHONY: all test valgrind clean
-
-valgrind: sudoku
-	valgrind $(VFLAGS) ./sudoku create medium
-	valgrind $(VFLAGS) ./sudoku solve < testBoards/tb1
 	
 clean:
 	rm -rf *.dSYM  # MacOS debugger info

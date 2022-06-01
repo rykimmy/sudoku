@@ -27,6 +27,7 @@ static void remove_slots(board_t* board, int empty_slots, int emptied);
 static bool solver_random(board_t* sudoku);
 static void sudoku_create(int difficulty_level);
 
+
 /************** main **************/
 int main (const int argc, char *argv[]) {
     int status = 0;
