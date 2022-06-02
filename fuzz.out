@@ -1,110 +1,24 @@
-#!/bin/bash
-# Matthew, Ashley, Lucy, Ryan
-# fuzztest.sh
-# 5/30/22
-#
-# Fuzz test for sudoku.c
-
-########## INPUT ##########
-# if more than 1 argument, then exit
-if [ $# -gt 1 ]
-then 
-     echo "[fuzz.sh] too many arugments. Please type 'n' number of boards you would like to test"
-     exit
-else 
-     num=$1 # set argument to number
-fi
-
-###### SETUP TEST FILES #####
-# creating files for board to write
-sB=testBoards/solvedBoard.txt # solved board
-cB=testBoards/createdBoard.txt # created board, used to verify that the solver didn't change any numbers
-rm -f $sB
-rm -f $cB
-touch $sB
-touch $cB
-chmod o+r $cB # give permission to access
-chmod o+r $sB
-
-######  FUNCTIONS  ######
-
-##___ Solve Board ___##
-# input: board file in testBoards directory
-# output: completed board
-solveBoard() {
-     ./sudoku solve < $1
-     if [ $? -eq 0 ]
-     then
-          echo "passed!"
-     fi
-}
-
-##___ Create Board ___##
-# input: one word with difficulty type, 'easy', 'medium', 'hard'
-# output: board with one solution that is solvable
-createBoard() {
-     ./sudoku create $1
-}
-
-##___ Fuzz Test Board ___##
-# input: board difficulty
-# output: completed board that was created by board solve
-testBoard() {
-     createBoard $1 >> $cB # pipe output to file
-     sed -i '1d' ./$cB # Do this because it auto prints 'creating new sudoku puzzle'. Will therefore delete first line
-     solveBoard $cB  >> $sB # read from the file
-     sed -i '1d' ./$sB
-     sed -i '10d' ./$sB # Solved board also prints 'Passed' at the bottom so we need to delete
-     echo "---create---"
-     cat $cB
-     echo "---solved---"
-     cat $sB
-     echo "---fuzzTest---"
-     ./fuzz check $sB
-     ./fuzz filled $cB $sB
-}
-
-###### Test Boards ######
-
-while [ $num -ge 1 ]
-do
-     echo "------- Print Board $num -------"
-     # rand=$(( $RANDOM % 3 + 1 )) # random number to decide if board is easy, medium, or hard
-     if [ $(($num % 3)) -eq 0 ]
-     then
-          testBoard easy
-     elif [ $(($num % 3)) -eq 1 ]
-     then
-          testBoard medium
-     else
-          testBoard hard
-     fi
-     num=$(( $num - 1 ))
-     rm -f $cB
-     rm -f $sB
-     sleep 1 # waits half a second
-done
 ------- Print Board 3 -------
 ---create---
-0 0 0 4 0 0 0 3 0 
-8 7 0 0 0 9 0 0 0 
-0 4 6 0 0 8 1 0 9 
-0 0 7 6 3 2 5 8 1 
-0 3 0 0 8 1 0 0 2 
-0 0 8 5 9 0 0 7 0 
-0 0 0 0 0 3 7 0 6 
-7 8 0 2 6 0 0 0 4 
-3 6 1 9 4 7 0 5 8 
+6 5 9 0 0 0 8 2 0 
+0 0 0 0 0 8 9 7 4 
+0 0 8 0 2 3 0 1 6 
+3 0 0 0 8 0 7 0 0 
+0 0 5 7 3 0 0 4 1 
+0 1 7 0 5 0 3 8 2 
+0 0 4 8 9 0 1 6 0 
+0 6 0 3 4 5 0 0 0 
+0 9 0 0 0 6 4 0 8 
 ---solved---
-9 1 2 4 5 6 8 3 7 
-8 7 3 1 2 9 4 6 5 
-5 4 6 3 7 8 1 2 9 
-4 9 7 6 3 2 5 8 1 
-6 3 5 7 8 1 9 4 2 
-1 2 8 5 9 4 6 7 3 
-2 5 4 8 1 3 7 9 6 
-7 8 9 2 6 5 3 1 4 
-3 6 1 9 4 7 2 5 8 
+6 5 9 4 1 7 8 2 3 
+1 2 3 5 6 8 9 7 4 
+4 7 8 9 2 3 5 1 6 
+3 4 6 2 8 1 7 5 9 
+2 8 5 7 3 9 6 4 1 
+9 1 7 6 5 4 3 8 2 
+7 3 4 8 9 2 1 6 5 
+8 6 1 3 4 5 2 9 7 
+5 9 2 1 7 6 4 3 8 
 ---fuzzTest---
 Solver has no duplicate or sum errors!! 
 passed 
@@ -112,25 +26,25 @@ Solver -successfully- filled in the correct slots!
 passed 
 ------- Print Board 2 -------
 ---create---
-0 0 9 0 0 1 7 5 0 
-0 0 3 6 8 0 9 0 0 
-2 0 0 9 3 0 1 6 0 
-1 0 0 0 6 0 4 0 0 
-6 0 0 8 0 0 0 1 7 
-4 0 0 5 0 0 0 0 0 
-0 0 0 0 9 4 0 0 1 
-0 0 1 0 0 0 0 0 0 
-0 0 2 1 5 0 0 7 9 
+0 0 0 5 0 0 0 0 0 
+0 3 0 0 6 8 0 0 0 
+0 0 0 0 0 0 6 0 0 
+0 0 0 0 2 0 8 3 0 
+0 0 3 9 8 5 4 0 0 
+0 0 6 3 0 0 0 9 0 
+0 0 0 0 1 3 0 0 6 
+0 0 4 8 0 0 0 0 5 
+0 6 1 0 0 4 0 0 3 
 ---solved---
-8 6 9 4 2 1 7 5 3 
-5 1 3 6 8 7 9 2 4 
-2 7 4 9 3 5 1 6 8 
-1 2 8 7 6 3 4 9 5 
-6 3 5 8 4 9 2 1 7 
-4 9 7 5 1 2 3 8 6 
-7 5 6 2 9 4 8 3 1 
-9 8 1 3 7 6 5 4 2 
-3 4 2 1 5 8 6 7 9 
+6 1 8 5 7 9 3 2 4 
+2 3 5 4 6 8 1 7 9 
+4 9 7 1 3 2 6 5 8 
+5 4 9 6 2 1 8 3 7 
+7 2 3 9 8 5 4 6 1 
+1 8 6 3 4 7 5 9 2 
+8 5 2 7 1 3 9 4 6 
+3 7 4 8 9 6 2 1 5 
+9 6 1 2 5 4 7 8 3 
 ---fuzzTest---
 Solver has no duplicate or sum errors!! 
 passed 
@@ -138,25 +52,25 @@ Solver -successfully- filled in the correct slots!
 passed 
 ------- Print Board 1 -------
 ---create---
-0 8 0 0 0 0 3 0 9 
-0 0 5 6 1 0 0 2 0 
-6 0 4 0 0 0 5 0 7 
-2 0 0 7 0 3 4 9 0 
-0 0 9 1 8 5 7 3 0 
-0 3 1 9 0 2 0 0 0 
-0 0 0 0 7 0 0 5 3 
-0 0 3 0 2 0 0 0 6 
-0 4 6 3 0 0 0 0 8 
+0 0 0 6 0 8 0 0 0 
+3 7 0 0 0 5 0 0 0 
+2 0 9 0 3 0 0 0 0 
+0 0 0 7 1 2 0 8 0 
+9 0 7 0 8 0 0 1 3 
+1 2 0 0 9 0 0 0 0 
+8 0 1 0 0 0 0 5 4 
+0 9 2 4 0 0 0 0 0 
+0 4 0 0 6 0 1 0 2 
 ---solved---
-1 8 7 2 5 4 3 6 9 
-3 9 5 6 1 7 8 2 4 
-6 2 4 8 3 9 5 1 7 
-2 5 8 7 6 3 4 9 1 
-4 6 9 1 8 5 7 3 2 
-7 3 1 9 4 2 6 8 5 
-8 1 2 4 7 6 9 5 3 
-9 7 3 5 2 8 1 4 6 
-5 4 6 3 9 1 2 7 8 
+5 1 4 6 2 8 3 7 9 
+3 7 6 9 4 5 8 2 1 
+2 8 9 1 3 7 4 6 5 
+4 5 3 7 1 2 9 8 6 
+9 6 7 5 8 4 2 1 3 
+1 2 8 3 9 6 5 4 7 
+8 3 1 2 7 9 6 5 4 
+6 9 2 4 5 1 7 3 8 
+7 4 5 8 6 3 1 9 2 
 ---fuzzTest---
 Solver has no duplicate or sum errors!! 
 passed 

@@ -15,9 +15,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
-#include "../libcs50/memory.h"
-#include "../libcs50/file.h"
-#include "../libcs50/counters.h"
+#include "libcs50/memory.h"
+#include "libcs50/file.h"
+#include "libcs50/counters.h"
 #include "board.h"
 
 /**** function declarations ****/
